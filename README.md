@@ -55,6 +55,8 @@ for the engine's printed, paper-style walkthrough.
 
 ### Interactive dashboard
 
+**Try it live: [sean-ezeocha-factor-risk-model.streamlit.app](https://sean-ezeocha-factor-risk-model.streamlit.app)** - hosted on Streamlit Cloud, no download or install needed; runs in your browser.
+
 Sidebar (every control maps to `factor_risk_model/config.py`):
 
 | Control | What it does |
