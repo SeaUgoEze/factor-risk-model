@@ -35,9 +35,11 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import statsmodels.api as sm
+from matplotlib.patches import Patch
 
 from src.analysis import (GP_DIVERGING, GP_DIVERGING_SEMANTIC,
-                          _recolor_annotations, AMBER, POS, _semantic,
+                          _recolor_annotations, _recolor_annotations_sign,
+                          SIGN_BLUE, SIGN_RED, AMBER, POS, _semantic,
                           apply_style)
 from src.config import FIGURES_DIR
 from src.regressions import MODEL_5F
@@ -308,7 +310,15 @@ def plot_holdings_corr(corr, path=None,
         cbar_kws={"label": "correlation"}, square=True, ax=ax,
     )
     ax.set_title(title)
-    _recolor_annotations(ax, corr.values, cmap, norm)
+    if _semantic(mode):
+        _recolor_annotations(ax, corr.values, cmap, norm)
+    else:
+        _recolor_annotations_sign(ax, corr.values, cmap, norm)
+        ax.legend(
+            handles=[Patch(color=SIGN_BLUE, label="positive"),
+                     Patch(color=SIGN_RED, label="negative")],
+            loc="upper center", bbox_to_anchor=(0.5, -0.07), ncol=2,
+            frameon=False, fontsize=8, handlelength=0.9, columnspacing=1.2)
 
     if path is None:
         path = FIGURES_DIR / "holdings_correlation.png"

@@ -33,9 +33,14 @@ from src.config import FIGURES_DIR
 
 # Grayscale diverging ramp for heatmaps - dark gray at the negative
 # extreme, mid gray at zero, light gray at the positive extreme, so the
-# whole chart family stays monochrome like the reference palette.
+# whole chart family stays monochrome like the reference palette.  The
+# three stops sit far apart in luminance (near-black / mid / near-white)
+# so positive, neutral and negative loadings read as three distinct
+# bands instead of one muddy gradient.  The mid stop is deliberately
+# dark so the sign-coloured annotations keep contrast across the widest
+# possible range of cell values.
 GP_DIVERGING = LinearSegmentedColormap.from_list(
-    "gp_diverging", ["#3A3A42", "#8A8A92", "#E8E8E8"])
+    "gp_diverging", ["#1E1E26", "#4E4E57", "#F1F1F1"])
 
 # Semantic diverging ramp - muted red at the negative extreme, neutral
 # gray at zero, muted deep green at the positive extreme.  The hues stay
@@ -53,6 +58,17 @@ NEG = "#E5484D"
 # and sit comfortably next to the existing downside red.
 POS = "#2EA043"
 AMBER = "#D29922"
+# Red/blue sign annotation on the monochrome heatmaps: negative loadings
+# print in red, positive in blue - the classic convention, and the one
+# the module docstring has always promised.  Each sign gets a bright
+# variant for dark cells and a deep variant for light cells, and a
+# contrast floor keeps every number readable.  This blue is the single
+# deliberate exception to the otherwise no-blue palette, added on request
+# as a sign annotation for the heatmap only.
+SIGN_RED = "#FF6A70"   # bright red - light enough to hold contrast on mid grays
+SIGN_RED_DARK = "#A62F33"
+SIGN_BLUE = "#86B7EA"
+SIGN_BLUE_DARK = "#1E5FA8"
 SECTOR_COLORS = [
     "#F8F8F8", "#B4B4B4", "#8A8A92", "#626262", "#4E4E56",
     "#C9C9CF", "#9A9AA2", "#71717A", "#3A3A42",
@@ -112,6 +128,46 @@ def _recolor_annotations(ax, values, cmap, norm):
         txt.set_color("#0d0d0d" if lum > 0.5 else "#f2f2f2")
 
 
+def _hex_lum(hex_color: str) -> float:
+    """Luminance of a hex color, same raw 0-1 weights as the rest of this file."""
+    raw = [int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    return 0.299 * raw[0] + 0.587 * raw[1] + 0.114 * raw[2]
+
+
+def _contrast(l1: float, l2: float) -> float:
+    """WCAG-style contrast ratio between two luminance values."""
+    hi, lo = max(l1, l2), min(l1, l2)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def _recolor_annotations_sign(ax, values, cmap, norm, threshold: float = 0.1):
+    """Red/blue sign annotation for the monochrome heatmaps.
+
+    Negative loadings print in red, positive in blue.  Each sign has a
+    bright variant for dark cells and a deep variant for light cells;
+    whichever reads better on the cell's background wins, and anything
+    that would fall below a readable contrast floor (e.g. values hugging
+    the neutral mid band, whose sign matters least) stays in the neutral
+    luminance-aware shade instead.  Only used in monochrome mode -
+    semantic mode already encodes sign in the cell fill.
+    """
+    values = np.asarray(values)
+    assert len(ax.texts) == values.size, "annotation/data cell count mismatch"
+    for txt, v in zip(ax.texts, values.ravel()):
+        r, g, b, _ = cmap(norm(v))
+        cell = 0.299 * r + 0.587 * g + 0.114 * b
+        neutral = "#0d0d0d" if cell > 0.5 else "#f2f2f2"
+        if abs(v) < threshold:
+            txt.set_color(neutral)
+            continue
+        bright, deep = ((SIGN_RED, SIGN_RED_DARK) if v < 0
+                        else (SIGN_BLUE, SIGN_BLUE_DARK))
+        cb = _contrast(_hex_lum(bright), cell)
+        cd = _contrast(_hex_lum(deep), cell)
+        txt.set_color(bright if cb >= cd else deep)
+        if max(cb, cd) < 1.2:
+            txt.set_color(neutral)
+
 def exposure_heatmap(exposures, factor_cols, sector_map, path=None,
                      mode: str = "mono"):
     """Heatmap of 5-factor betas, rows grouped by sector.
@@ -154,14 +210,25 @@ def exposure_heatmap(exposures, factor_cols, sector_map, path=None,
     for lab, col in zip(ax.get_yticklabels(), label_colors):
         lab.set_color(col)
     ax.set_title("Factor exposures - 5-factor model (2015-2019, monthly)")
-    _recolor_annotations(ax, tbl.values, cmap, norm)
+    if _semantic(mode):
+        _recolor_annotations(ax, tbl.values, cmap, norm)
+    else:
+        _recolor_annotations_sign(ax, tbl.values, cmap, norm)
 
     # Legend BELOW the plot (horizontal) so it never overlaps the heatmap
-    # or the colorbar on the right.
+    # or the colorbar on the right.  In monochrome mode the sign legend
+    # sits under the sector legend, keyed to the red/blue annotations.
     handles = [Patch(color=c, label=s) for s, c in colors.items()]
-    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.05),
-              ncol=5, frameon=False, fontsize=8, title="sector",
-              title_fontsize=8, columnspacing=1.4)
+    leg = ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.05),
+                    ncol=5, frameon=False, fontsize=8, title="sector",
+                    title_fontsize=8, columnspacing=1.4)
+    if not _semantic(mode):
+        ax.add_artist(leg)
+        ax.legend(
+            handles=[Patch(color=SIGN_BLUE, label="positive loading"),
+                     Patch(color=SIGN_RED, label="negative loading")],
+            loc="upper center", bbox_to_anchor=(0.5, -0.125), ncol=2,
+            frameon=False, fontsize=8, handlelength=0.9, columnspacing=1.2)
 
     if path is None:
         path = FIGURES_DIR / "factor_exposures_heatmap.png"
@@ -218,7 +285,15 @@ def correlation_heatmap(corr, path=None, mode: str = "mono"):
         cbar_kws={"label": "correlation"}, square=True, ax=ax,
     )
     ax.set_title("Fama-French factor correlations (2015-2019, monthly)")
-    _recolor_annotations(ax, corr.values, cmap, norm)
+    if _semantic(mode):
+        _recolor_annotations(ax, corr.values, cmap, norm)
+    else:
+        _recolor_annotations_sign(ax, corr.values, cmap, norm)
+        ax.legend(
+            handles=[Patch(color=SIGN_BLUE, label="positive"),
+                     Patch(color=SIGN_RED, label="negative")],
+            loc="upper center", bbox_to_anchor=(0.5, -0.09), ncol=2,
+            frameon=False, fontsize=8, handlelength=0.9, columnspacing=1.2)
 
     if path is None:
         path = FIGURES_DIR / "factor_correlation_heatmap.png"
