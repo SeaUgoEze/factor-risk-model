@@ -557,7 +557,7 @@ def page() -> str:
     <a href="#exposures">exposures</a>
     <a href="#performance">performance</a>
     <a href="#findings">findings</a>
-    <a class="cta-nav" href="https://seane-zeocha-factor-risk-model.streamlit.app"
+    <a class="cta-nav" href="https://sean-ezeocha-factor-risk-model.streamlit.app"
        target="_blank" rel="noopener">live app</a>
   </div>
 </nav>
@@ -586,7 +586,7 @@ def page() -> str:
   </div>
   <p class="meta"><b>26</b> stocks · <b>8</b> sectors · <b>59</b> months · <b>5</b> factors · <b>1</b> optimized portfolio</p>
   <div>
-    <a class="cta" href="https://seane-zeocha-factor-risk-model.streamlit.app"
+    <a class="cta" href="https://sean-ezeocha-factor-risk-model.streamlit.app"
        target="_blank" rel="noopener">launch the live dashboard →</a>
   </div>
 </header>
@@ -612,7 +612,7 @@ def page() -> str:
         with sliders, hit Run, export CSV/Excel/PDF/HTML.
       </p>
       <div class="links" style="margin-top:20px">
-        <a class="cta" href="https://seane-zeocha-factor-risk-model.streamlit.app"
+        <a class="cta" href="https://sean-ezeocha-factor-risk-model.streamlit.app"
            target="_blank" rel="noopener">launch the live dashboard →</a>
       </div>
       <div class="links" style="margin-top:20px">

@@ -8,7 +8,7 @@ import {
 import { useEnter, usePop } from "../components/motion";
 import { COLORS, FONT } from "../styles";
 
-const URL = "seane-zeocha-factor-risk-model.streamlit.app";
+const URL = "sean-ezeocha-factor-risk-model.streamlit.app";
 
 // Scene 5 - CTA: try it live, the URL pill, no-install badges, the button.
 export const CTAScene: React.FC = () => {
