@@ -8,7 +8,7 @@ import {
 import { useEnter, usePop } from "../components/motion";
 import { COLORS, FONT } from "../styles";
 
-const URL = "seanezeocha-factor-risk-model.streamlit.app";
+const URL = "seane-zeocha-factor-risk-model.streamlit.app";
 
 // Scene 5 - CTA: try it live, the URL pill, no-install badges, the button.
 export const CTAScene: React.FC = () => {
@@ -41,7 +41,7 @@ export const CTAScene: React.FC = () => {
             textShadow: "0 8px 70px rgba(0,0,0,0.65)",
           }}
         >
-          Try it <span style={{ color: COLORS.accent }}>live</span>
+          Try it <span style={{ color: COLORS.green }}>live</span>
         </div>
 
         <div
@@ -65,17 +65,17 @@ export const CTAScene: React.FC = () => {
             alignItems: "center",
             gap: 18,
             padding: "26px 58px",
-            borderRadius: 999,
-            background: `linear-gradient(160deg, ${COLORS.accent}, #4fd8e0)`,
+            borderRadius: 0,
+            background: COLORS.accent,
             boxShadow: `0 0 60px ${COLORS.accentStrong}, 0 24px 50px rgba(0,0,0,0.5)`,
             fontFamily: FONT.sans,
             fontSize: 44,
             fontWeight: 700,
-            color: "#0a0a0a",
+            color: COLORS.bg,
           }}
         >
           Open the dashboard
-          <ArrowUpRight size={46} color="#0a0a0a" strokeWidth={2.6} />
+          <ArrowUpRight size={46} color={COLORS.bg} strokeWidth={2.6} />
         </div>
 
         {/* URL pill */}
@@ -87,11 +87,11 @@ export const CTAScene: React.FC = () => {
             alignItems: "center",
             gap: 20,
             padding: "20px 40px",
-            borderRadius: 999,
+            borderRadius: 0,
             background: COLORS.panel,
             border: `1.5px solid ${COLORS.accentStrong}`,
             transform: `scale(${pulse})`,
-            boxShadow: `0 0 40px rgba(121,246,252,0.12)`,
+            boxShadow: `0 0 40px ${COLORS.accentSoft}`,
           }}
         >
           <ExternalLink size={38} color={COLORS.accent} />
@@ -128,7 +128,7 @@ const Badge: React.FC<{ children: React.ReactNode }> = ({ children }) => (
       alignItems: "center",
       gap: 12,
       padding: "14px 28px",
-      borderRadius: 999,
+      borderRadius: 0,
       border: `1.5px solid ${COLORS.panelBorder}`,
       background: COLORS.panel,
       color: COLORS.muted,

@@ -42,7 +42,7 @@ export const ConfigureScene: React.FC = () => {
             width: 660,
             background: COLORS.panel,
             border: `1.5px solid ${COLORS.panelBorder}`,
-            borderRadius: 26,
+            borderRadius: 0,
             padding: "48px 54px",
             boxShadow: "0 40px 120px rgba(0,0,0,0.55)",
           }}
@@ -76,22 +76,21 @@ export const ConfigureScene: React.FC = () => {
           <Row label="Factor model">
             <div style={{ display: "flex", gap: 14 }}>
               <Pill delay={40} lit>
-                3-Factor
+                5-Factor
               </Pill>
-              <Pill delay={48}>5-Factor</Pill>
+              <Pill delay={48}>3-Factor</Pill>
             </div>
           </Row>
 
-          <Row label="Vol budget">
-            <div
-              style={{
-                width: 420,
-                height: 10,
-                borderRadius: 5,
-                background: "#232323",
-                position: "relative",
-              }}
-            >
+          <Row label="Vol budget">              <div
+                style={{
+                  width: 420,
+                  height: 10,
+                  borderRadius: 0,
+                  background: COLORS.line,
+                  position: "relative",
+                }}
+              >
               <div
                 style={{
                   position: "absolute",
@@ -99,7 +98,7 @@ export const ConfigureScene: React.FC = () => {
                   top: 0,
                   bottom: 0,
                   width: `${thumbX * 100}%`,
-                  borderRadius: 5,
+                  borderRadius: 0,
                   background: COLORS.accent,
                   boxShadow: `0 0 18px ${COLORS.accentStrong}`,
                 }}
@@ -110,8 +109,8 @@ export const ConfigureScene: React.FC = () => {
                   top: -11,
                   width: 32,
                   height: 32,
-                  borderRadius: "50%",
-                  background: "#0a0a0a",
+                  borderRadius: 0,
+                  background: COLORS.bg,
                   border: `3px solid ${COLORS.accent}`,
                   boxShadow: `0 0 20px ${COLORS.accentStrong}`,
                   left: `calc(${thumbX * 100}% - 16px)`,
@@ -132,7 +131,7 @@ export const ConfigureScene: React.FC = () => {
               >
                 →
               </span>
-              <Pill delay={70}>2024</Pill>
+              <Pill delay={70}>2019</Pill>
             </div>
           </Row>
         </div>
@@ -210,9 +209,9 @@ const Pill: React.FC<{
       style={{
         ...style,
         padding: "14px 30px",
-        borderRadius: 12,
-        border: `1.5px solid ${lit ? "rgba(121,246,252,0.7)" : COLORS.panelBorder}`,
-        background: lit ? "rgba(121,246,252,0.10)" : "#1a1a1a",
+        borderRadius: 0,
+        border: `1.5px solid ${lit ? "rgba(248,248,248,0.7)" : COLORS.panelBorder}`,
+        background: lit ? "rgba(248,248,248,0.10)" : COLORS.panel,
         color: lit ? COLORS.accent : COLORS.muted,
         fontFamily: FONT.mono,
         fontSize: 33,

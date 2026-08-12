@@ -45,8 +45,8 @@ export const RunScene: React.FC = () => {
               ...play,
               width: 168,
               height: 168,
-              borderRadius: "50%",
-              background: `linear-gradient(160deg, ${COLORS.accent}, #4fd8e0)`,
+              borderRadius: 0,
+              background: COLORS.accent,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -55,8 +55,8 @@ export const RunScene: React.FC = () => {
           >
             <Play
               size={72}
-              color="#0a0a0a"
-              fill="#0a0a0a"
+              color={COLORS.bg}
+              fill={COLORS.bg}
               style={{ marginLeft: 10 }}
             />
           </div>
@@ -67,8 +67,8 @@ export const RunScene: React.FC = () => {
           style={{
             width: 860,
             height: 12,
-            borderRadius: 6,
-            background: "#1d1d1d",
+            borderRadius: 0,
+            background: COLORS.line,
             overflow: "hidden",
             marginBottom: 58,
           }}
@@ -77,8 +77,8 @@ export const RunScene: React.FC = () => {
             style={{
               width: `${progress * 100}%`,
               height: "100%",
-              borderRadius: 6,
-              background: `linear-gradient(90deg, ${COLORS.accent}, #4fd8e0)`,
+              borderRadius: 0,
+              background: COLORS.accent,
               boxShadow: `0 0 24px ${COLORS.accentStrong}`,
             }}
           />
@@ -93,9 +93,9 @@ export const RunScene: React.FC = () => {
                 <div
                   style={{
                     padding: "14px 28px",
-                    borderRadius: 999,
-                    border: `1.5px solid ${on ? "rgba(121,246,252,0.75)" : COLORS.panelBorder}`,
-                    background: on ? "rgba(121,246,252,0.10)" : COLORS.panel,
+                    borderRadius: 0,
+                    border: `1.5px solid ${on ? "rgba(248,248,248,0.75)" : COLORS.panelBorder}`,
+                    background: on ? "rgba(248,248,248,0.10)" : COLORS.panel,
                     color: on ? COLORS.accent : COLORS.faint,
                     fontFamily: FONT.sans,
                     fontSize: 33,

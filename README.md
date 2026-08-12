@@ -82,6 +82,30 @@ Tabs after **▶ Run analysis**:
 - **Export** - one-click CSV per table, multi-sheet Excel workbook, a **PDF report**,
   and a printable HTML report.
 
+### Theme & chart colours
+
+The dashboard uses a flat monochrome theme with perfectly rectangular borders
+(zero border-radius anywhere):
+
+| Token | Hex | Used for |
+|---|---|---|
+| Canvas | `#101018` | app background |
+| Panels | `#181820` | cards, sidebar surfaces |
+| Hairlines | `#282830` | borders, rules, grid lines |
+| Ink / accent | `#F8F8F8` | text, sliders, Run button, selected tab |
+| Muted / faint | `#8A8A92` / `#626262` | labels, secondary text |
+| Downside red | `#E5484D` | losses, negatives, flagged windows |
+
+A **Chart colour** toggle in the sidebar controls only the figures (the UI
+chrome stays grayscale in both modes):
+
+- **Monochrome** (default) - every chart is grayscale.
+- **Semantic** - colour is added only where it carries meaning: muted deep
+  green `#2EA043` for gains/positive loadings, the downside red `#E5484D` for
+  losses, amber `#D29922` for the equal-weight comparison series, and a
+  red-to-neutral-to-green ramp on the exposure/correlation heatmaps so
+  positive vs negative loadings read at a glance. No blue appears anywhere.
+
 > **Why "vol budget" is a warning, not a constraint.** The optimizer *minimizes*
 > variance for a fixed mandate, so achieved volatility is an output, not an input. A
 > budget above the minimum is automatically satisfied; below it is mathematically

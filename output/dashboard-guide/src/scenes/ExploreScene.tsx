@@ -41,7 +41,7 @@ export const ExploreScene: React.FC = () => {
             width: 760,
             background: COLORS.panel,
             border: `1.5px solid ${COLORS.panelBorder}`,
-            borderRadius: 26,
+            borderRadius: 0,
             padding: "46px 52px",
             boxShadow: "0 40px 120px rgba(0,0,0,0.55)",
           }}
@@ -79,9 +79,9 @@ export const ExploreScene: React.FC = () => {
                     style={{
                       width: 74,
                       height: h,
-                      borderRadius: "10px 10px 4px 4px",
-                      background: `linear-gradient(180deg, ${COLORS.accent}, rgba(121,246,252,0.35))`,
-                      boxShadow: `0 0 26px ${COLORS.accentStrong}`,
+                      borderRadius: 0,
+                      background: `linear-gradient(180deg, ${COLORS.green}, rgba(46,160,67,0.35))`,
+                      boxShadow: `0 0 26px rgba(46,160,67,0.35)`,
                     }}
                   />
                   <div
@@ -147,7 +147,7 @@ export const ExploreScene: React.FC = () => {
                     flex: 1,
                     background: COLORS.panel,
                     border: `1.5px solid ${COLORS.panelBorder}`,
-                    borderRadius: 18,
+                    borderRadius: 0,
                     padding: "24px 26px",
                   }}
                 >
@@ -166,7 +166,7 @@ export const ExploreScene: React.FC = () => {
                     style={{
                       fontFamily: FONT.mono,
                       fontSize: 46,
-                      color: s.value < 0 ? "#ffb3b3" : COLORS.accent,
+                      color: s.value < 0 ? COLORS.danger : COLORS.accent,
                     }}
                   >
                     {val.toFixed(s.decimals)}

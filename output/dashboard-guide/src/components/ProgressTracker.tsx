@@ -31,7 +31,7 @@ export const ProgressTracker: React.FC<{ active: number }> = ({ active }) => {
                 style={{
                   width: 58,
                   height: 3,
-                  borderRadius: 2,
+                  borderRadius: 0,
                   backgroundColor: on ? COLORS.accent : COLORS.faint,
                   boxShadow: on
                     ? `0 0 14px ${COLORS.accentStrong}`

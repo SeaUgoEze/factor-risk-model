@@ -1,6 +1,8 @@
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import type { CSSProperties } from "react";
 
+import { COLORS } from "../styles";
+
 // Lift-in: fades and rises from below (or from any offset).
 export const useEnter = (delay = 0, fromY = 70, damping = 18): CSSProperties => {
   const frame = useCurrentFrame();
@@ -82,7 +84,7 @@ export const SceneLabel: React.FC<{ index: string; name: string }> = ({
           fontFamily: "inherit",
           fontSize: 32,
           letterSpacing: 3,
-          color: "#ededed",
+          color: COLORS.text,
         }}
       >
         {index}
@@ -91,15 +93,15 @@ export const SceneLabel: React.FC<{ index: string; name: string }> = ({
         style={{
           width: 64,
           height: 2,
-          background: "rgba(121, 246, 252, 0.45)",
-          borderRadius: 1,
+          background: "rgba(248, 248, 248, 0.45)",
+          borderRadius: 0,
         }}
       />
       <span
         style={{
           fontSize: 32,
           letterSpacing: 4,
-          color: "rgba(121, 246, 252, 0.9)",
+          color: COLORS.accent,
         }}
       >
         {name}
@@ -117,13 +119,13 @@ export const Chip: React.FC<{
   <div
     style={{
       padding: "14px 26px",
-      borderRadius: 999,
-      border: `1.5px solid ${lit ? "rgba(121,246,252,0.75)" : "#262626"}`,
-      background: lit ? "rgba(121,246,252,0.10)" : "#121212",
-      color: lit ? "#79F6FC" : "#9a9a9a",
+      borderRadius: 0,
+      border: `1.5px solid ${lit ? "rgba(248,248,248,0.75)" : COLORS.panelBorder}`,
+      background: lit ? "rgba(248,248,248,0.10)" : COLORS.panel,
+      color: lit ? COLORS.accent : COLORS.muted,
       fontSize: 34,
       fontWeight: 500,
-      boxShadow: lit ? "0 0 22px rgba(121,246,252,0.22)" : "none",
+      boxShadow: lit ? `0 0 22px ${COLORS.accentStrong}` : "none",
       ...style,
     }}
   >
