@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Downloaded / generated data
+data/*.csv
+figures/
+outputs/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Remotion dashboard-guide project: dependencies + rendered output only
+output/dashboard-guide/node_modules/
+output/dashboard-guide/out/
+
+# Logs
+*.log
+*.log.err
+
+# Freebuff app data (conversation database — never push)
+.freebuff/
+
+# Streamlit secrets guard (create only if you ever add real credentials)
+.streamlit/secrets.toml

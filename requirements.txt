@@ -1,0 +1,43 @@
+# ----------------------------------------------------------------------
+# Factor-Based Risk & Optimization Model - dependencies
+# Install with:  python -m pip install -r requirements.txt
+# ----------------------------------------------------------------------
+
+# Core data stack
+numpy>=2.0
+pandas>=2.2
+scipy>=1.14                 # scipy.optimize for portfolio optimization (Step 4)
+
+# Statistics / regression
+statsmodels>=0.14.4         # OLS regressions with Newey-West / diagnostics (Step 2)
+scikit-learn>=1.5           # PCA baseline + anomaly cross-checks (Step 6)
+
+# Data sources
+yfinance>=0.2.49            # Yahoo Finance daily prices
+pandas-datareader>=0.10     # Kenneth French factor library (or direct download fallback)
+
+# Visualization
+matplotlib>=3.9
+seaborn>=0.13
+
+# Notebook generation (Step 7)
+nbformat>=5.10
+
+# --- Interactive application layer (new) ---------------------------------
+streamlit>=1.36             # web dashboard: widgets, tabs, download buttons
+openpyxl>=3.1               # .xlsx export of exposures / weights / risk tables
+jinja2>=3.1                 # HTML report template (print-to-PDF from the browser)
+
+# --- Testing (Step 7) ------------------------------------------------------
+pytest>=8                   # run with: python -m pytest tests/ -q
+pypdfium2>=4.30             # PDF rasterization for the export-content
+                            #   regression test (test_pdf_cover_text_*)
+
+# --- Optional ---------------------------------------------------------
+# ipython>=8                  # inline figures in the notebook (optional)
+# ipywidgets>=8               # Mode A: Jupyter slider interface (optional;
+#                             #   needs a Jupyter kernel - the primary
+#                             #   interface is the Streamlit dashboard)
+# Step 6's autoencoder is pure numpy (no torch required); the optional
+# torch install below is only for exploring a PyTorch version of it.
+# torch>=2.5                 # ~2.5 GB download on Windows; uncomment if desired

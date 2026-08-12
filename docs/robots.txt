@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://seaugoeze.github.io/factor-risk-model/sitemap.xml

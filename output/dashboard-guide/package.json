@@ -1,0 +1,21 @@
+{
+  "name": "factor-risk-dashboard-guide",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx remotion studio",
+    "render": "npx remotion render"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "lucide-react": "^0.400.0",
+    "react": "^19",
+    "react-dom": "^19",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.24.0",
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}

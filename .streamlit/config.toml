@@ -1,0 +1,23 @@
+# Streamlit dashboard theme - monochrome "graph paper" system.
+# Flat near-black canvas (#101018) with hairline gray rules, perfectly
+# rectangular borders (zero border-radius), light gray (#F8F8F8) as the
+# single functional accent. No color - the palette is pure grayscale.
+[theme]
+base = "dark"
+primaryColor = "#F8F8F8"   # light gray - sliders, buttons, links, focus
+backgroundColor = "#101018"   # near-black canvas (subtle cool tint)
+secondaryBackgroundColor = "#181820"   # panels / sidebar
+textColor = "#F8F8F8"   # light gray ink, high contrast on near-black
+
+[server]
+headless = true
+address = "127.0.0.1"   # bind to localhost only - not LAN/internet-visible
+
+[client]
+showErrorDetails = "none"   # never render stack traces / local file paths
+
+[browser]
+gatherUsageStats = false   # no telemetry
+
+[runner]
+fastReruns = true
