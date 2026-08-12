@@ -25,7 +25,7 @@ output/dashboard-guide/out/
 *.log
 *.log.err
 
-# Freebuff app data (conversation database — never push)
+# Local app data (conversation database — never push)
 .freebuff/
 
 # Streamlit secrets guard (create only if you ever add real credentials)
