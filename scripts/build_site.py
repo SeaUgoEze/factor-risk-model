@@ -102,37 +102,37 @@ BUILDS = [
     ("s1", "Data engine",
      "Resilient fetch + cache + alignment layer. Survived real Yahoo "
      "rate-limits and a pandas-datareader index quirk.",
-     "#004d00", "scripts/step1_fetch.py", "src/data.py"),
+     "#F8F8F8", "scripts/step1_fetch.py", "src/data.py"),
     ("s2", "Factor regressions",
      "Done: 26 stock-level OLS runs - betas, t-stats, 95% confidence "
      "intervals, fit diagnostics. SPY validates at β≈0.99, R²≈0.997.",
-     "#ffe02a", "scripts/step2_regressions.py", "src/regressions.py"),
+     "#F8F8F8", "scripts/step2_regressions.py", "src/regressions.py"),
     ("s3", "Factor analysis",
      "Done: exposure heatmap, factor correlations (HML↔CMA +0.61), "
      "plain-English profiles.",
-     "#ff6568", "scripts/step3_analysis.py", "src/analysis.py"),
+     "#F8F8F8", "scripts/step3_analysis.py", "src/analysis.py"),
     ("s4", "Portfolio optimizer",
      "Done: SLSQP/trust-constr minimize variance under a factor mandate. "
      "Limited shorts beat long-only (17.3% vs 23.0% vol).",
-     "#ff8b1a", "scripts/step4_optimization.py", "src/optimization.py"),
+     "#F8F8F8", "scripts/step4_optimization.py", "src/optimization.py"),
     ("s5", "Risk lab",
      "Done: backtest vs SPY and equal weight, max drawdown 20.9%, historical "
      "VaR 6.5% / CVaR 8.1%, factor attribution R² 0.75.",
-     "#0f766e", "scripts/step5_performance.py", "src/risk.py"),
+     "#F8F8F8", "scripts/step5_performance.py", "src/risk.py"),
     ("s6", "Anomaly detection",
      "Done: hand-rolled numpy autoencoder + PCA baseline. Flags 2018 Q4, "
      "Jan-2019 rebound, May/Aug-2019; 5/11 months shared with the linear "
      "baseline.",
-     "#86efac", "scripts/step6_anomaly.py", "src/anomaly.py"),
+     "#F8F8F8", "scripts/step6_anomaly.py", "src/anomaly.py"),
     ("s7", "Docs & notebook",
      "Done: README.md, notebooks/factor_risk_model.ipynb (15 code cells "
      "dry-run verified end-to-end), and the key findings below.",
-     "#c4b5fd", "scripts/make_notebook.py", "README.md"),
+     "#F8F8F8", "scripts/make_notebook.py", "README.md"),
     ("s8", "Interactive app",
      "Done: interactive dashboard + CLI over the same run_pipeline() - ticker "
      "picker, mandate sliders, 95% CIs, stress tests, windowed autoencoder, "
-     "and CSV/Excel/PDF/HTML export. 31 offline pytest checks green.",
-     "#86efac", "factor_risk_model/interface/streamlit_app.py",
+     "and CSV/Excel/PDF/HTML export. 32 offline pytest checks green.",
+     "#F8F8F8", "factor_risk_model/interface/streamlit_app.py",
      "factor_risk_model/pipeline.py"),
 ]
 
@@ -162,8 +162,8 @@ FINDINGS = [
 FIGURES = [
     ("factor_exposures_heatmap.png", "fig-heatmap",
      "Factor exposure heatmap of every stock's five betas, grouped by sector",
-     "fig 01 - every stock's five betas, rows grouped by sector. Blue loads "
-     "positive, red negative; tickers are colored by sector."),
+     "fig 01 - every stock's five betas, rows grouped by sector. Light "
+     "loads positive, dark negative; tickers are labeled by sector."),
     ("factor_correlation_heatmap.png", "fig-corr",
      "Fama-French factor correlation heatmap",
      "fig 02 - factor correlations. HML ↔ CMA at +0.61 is the big one: value "
@@ -171,7 +171,7 @@ FIGURES = [
     ("portfolio_weights.png", "fig-weights",
      "Optimal portfolio weights hitting the factor mandate",
      "fig 03 - optimal weights meeting the value + size mandate (limited "
-     "shorts, −10% floor). Blue = long, red = short; the mandate is hit "
+     "shorts, −10% floor). Light = long, dark = short; the mandate is hit "
      "exactly at 17.3% annualized vol."),
     ("cumulative_returns.png", "fig-cumulative",
      "Cumulative growth of the optimized portfolio vs SPY vs equal weight",
@@ -341,14 +341,13 @@ def seo_head() -> str:
 # ============================================================================
 CSS = """
   :root {
-    --bg: #ffffff; --fg: #1a1a1a; --grid-line: rgba(0,0,0,0.05);
-    --t-90: rgba(26,26,26,.90); --t-70: rgba(26,26,26,.70);
-    --t-60: rgba(26,26,26,.60); --t-50: rgba(26,26,26,.55);
-    --t-40: rgba(26,26,26,.45); --t-30: rgba(26,26,26,.30);
-    --card-bg: #f5f5f4; --card-border: rgba(0,0,0,.10);
-    --card-border-hover: rgba(0,0,0,.22); --card-bg-hover: #ececea;
-    --green: #15803d; --yellow: #b45309; --blue: #004d00;
-    --orange: #c2410c; --red: #b91c1c; --cyan: #0f766e;
+    --bg: #101018; --fg: #F8F8F8; --grid-line: rgba(248,248,248,0.05);
+    --t-90: rgba(248,248,248,.90); --t-70: rgba(248,248,248,.70);
+    --t-60: rgba(248,248,248,.60); --t-50: rgba(248,248,248,.55);
+    --t-40: rgba(248,248,248,.45); --t-30: rgba(248,248,248,.30);
+    --card-bg: #181820; --card-border: #282830;
+    --card-border-hover: #3A3A42; --card-bg-hover: #1E1E28;
+    --green: #2EA043; --red: #E5484D; --ink: #F8F8F8;
     --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
     --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
@@ -356,17 +355,17 @@ CSS = """
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--fg); font-family: var(--sans);
     font-weight: 400; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-  ::selection { background: var(--blue); color: #ffffff; }
+  ::selection { background: var(--ink); color: var(--bg); }
   .grid-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background-image: repeating-linear-gradient(to right, var(--grid-line) 0,
     var(--grid-line) 1px, transparent 1px, transparent 2vw); }
   .glow { position: fixed; z-index: 0; pointer-events: none; border-radius: 50%;
     filter: blur(90px); opacity: .07; }
-  .glow.a { width: 480px; height: 480px; top: -140px; left: -120px; background: var(--blue); }
-  .glow.b { width: 420px; height: 420px; bottom: 8%; right: -140px; background: var(--yellow); }
+  .glow.a { width: 480px; height: 480px; top: -140px; left: -120px; background: var(--ink); }
+  .glow.b { width: 420px; height: 420px; bottom: 8%; right: -140px; background: var(--ink); }
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 60;
     display: flex; align-items: center; justify-content: space-between; padding: 18px 24px;
-    background: rgba(255,255,255,.80); backdrop-filter: blur(12px);
+    background: rgba(16,16,24,.80); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--card-border); }
   nav .brand { font-family: var(--mono); font-size: 13px; letter-spacing: .02em; color: var(--fg); }
   nav .links { display: flex; gap: 26px; }
@@ -402,22 +401,22 @@ CSS = """
   header.hero .tagline { margin: 0; max-width: 32rem; text-align: left;
     font-size: 16px; color: var(--t-60); }
   header.hero .tagline a { color: var(--fg); text-decoration: underline;
-    text-decoration-color: var(--blue); text-underline-offset: 3px; }
+    text-decoration-color: var(--ink); text-underline-offset: 3px; }
   header.hero .meta { margin-top: 34px; font-family: var(--mono); font-size: 12px;
     letter-spacing: .08em; text-transform: uppercase; color: var(--t-40); }
   header.hero .meta b { color: var(--t-70); font-weight: 400; }
   .card { position: relative; overflow: hidden; border: 1px solid var(--card-border);
-    border-radius: 10px; background: var(--card-bg);
-    backdrop-filter: blur(10px) saturate(150%); padding: 26px;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px); padding: 26px;
     transition: border-color .3s, background .3s, transform .3s; }
   .card:hover { border-color: var(--card-border-hover); background: var(--card-bg-hover); }
   .card .flood { position: absolute; inset: -30%;
-    background: radial-gradient(circle at 30% 20%, var(--flood, var(--blue)), transparent 60%);
+    background: radial-gradient(circle at 30% 20%, var(--flood, var(--ink)), transparent 60%);
     opacity: 0; transition: opacity .5s; pointer-events: none; }
   .card:hover .flood { opacity: .10; }
   .card .top { position: relative; display: flex; align-items: center; gap: 12px; }
-  .card .icon { width: 44px; height: 44px; border-radius: 9px; flex-shrink: 0;
-    border: 1px solid var(--card-border); background: #ffffff;
+  .card .icon { width: 44px; height: 44px; flex-shrink: 0;
+    border: 1px solid var(--card-border); background: var(--bg);
     display: grid; place-items: center; font-family: var(--mono); font-size: 13px; color: var(--t-70); }
   .card h3 { position: relative; font-size: 17px; font-weight: 500; color: var(--fg); }
   .card .sub { position: relative; color: var(--t-50); font-size: 13.5px; margin-top: 3px; }
@@ -428,18 +427,18 @@ CSS = """
     font-family: var(--mono); font-size: 13px; }
   .card .links a { color: var(--t-70); text-decoration: none;
     border-bottom: 1px solid transparent; padding-bottom: 1px; transition: color .2s; }
-  .card .links a:hover { color: var(--fg); border-bottom-color: var(--link, var(--blue)); }
-  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .card .links a:hover { color: var(--fg); border-bottom-color: var(--link, var(--ink)); }
+  .dot { width: 8px; height: 8px; display: inline-block; }
   .dot.done { background: var(--green); }
-  .dot.next { background: var(--yellow); }
-  .dot.todo { background: rgba(0,0,0,.15); }
+  .dot.next { background: var(--t-40); }
+  .dot.todo { background: rgba(248,248,248,.15); }
   .stat-pill { display: inline-flex; align-items: center; gap: 8px;
     font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em;
     text-transform: uppercase; color: var(--t-50); }
-  .rows { border-top: 1px solid rgba(0,0,0,.08); }
+  .rows { border-top: 1px solid rgba(248,248,248,.08); }
   .row { display: flex; align-items: baseline; gap: 18px; padding: 17px 4px;
-    border-bottom: 1px solid rgba(0,0,0,.08); transition: background .25s; }
-  .row:hover { background: rgba(0,0,0,.03); }
+    border-bottom: 1px solid rgba(248,248,248,.08); transition: background .25s; }
+  .row:hover { background: rgba(248,248,248,.03); }
   .row .no { font-family: var(--mono); font-size: 12px; color: var(--t-30);
     width: 34px; flex-shrink: 0; }
   .row .main { flex: 1; min-width: 0; }
@@ -449,7 +448,7 @@ CSS = """
     text-align: right; flex-shrink: 0; }
   .row .status { display: flex; align-items: center; gap: 8px; }
   figure { margin: 0 0 44px; }
-  figure img { width: 100%; border: 1px solid var(--card-border); border-radius: 10px; }
+  figure img { width: 100%; border: 1px solid var(--card-border); }
   figcaption { margin-top: 10px; font-family: var(--mono); font-size: 12px; color: var(--t-40); }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
@@ -461,12 +460,21 @@ CSS = """
     font-family: var(--mono); font-size: 14px; }
   footer .socials a { color: var(--t-70); text-decoration: none; padding-bottom: 2px;
     border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
-  footer .socials a:hover { color: var(--fg); border-bottom-color: var(--blue); }
+  footer .socials a:hover { color: var(--fg); border-bottom-color: var(--ink); }
   .privacy-badge { margin-top: 36px; display: inline-flex; align-items: center;
     justify-content: center; gap: 9px; max-width: 36rem; font-family: var(--mono);
     font-size: 11px; letter-spacing: .04em; line-height: 1.55; color: var(--t-50);
-    border: 1px solid var(--card-border); border-radius: 999px; padding: 9px 18px; }
+    border: 1px solid var(--card-border); padding: 9px 18px; }
   .privacy-badge svg { flex-shrink: 0; }
+  /* live-dashboard call to action - rectangular, like the app's Run button */
+  .cta { display: inline-block; margin-top: 30px; padding: 13px 24px;
+    background: var(--ink); color: var(--bg); font-family: var(--mono);
+    font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    text-decoration: none; border: 1px solid var(--ink); transition: all .2s; }
+  .cta:hover { background: transparent; color: var(--ink); }
+  nav .links a.cta-nav { color: var(--fg); border: 1px solid var(--card-border);
+    padding: 6px 12px; }
+  nav .links a.cta-nav:hover { border-color: var(--fg); }
   footer .foot { margin-top: 56px; font-family: var(--mono); font-size: 11px; color: var(--t-30); }
   a.anchor { scroll-margin-top: 90px; }
 """
@@ -549,6 +557,8 @@ def page() -> str:
     <a href="#exposures">exposures</a>
     <a href="#performance">performance</a>
     <a href="#findings">findings</a>
+    <a class="cta-nav" href="https://seane-zeocha-factor-risk-model.streamlit.app"
+       target="_blank" rel="noopener">live app</a>
   </div>
 </nav>
 
@@ -575,13 +585,17 @@ def page() -> str:
     </div>
   </div>
   <p class="meta"><b>26</b> stocks · <b>8</b> sectors · <b>59</b> months · <b>5</b> factors · <b>1</b> optimized portfolio</p>
+  <div>
+    <a class="cta" href="https://seane-zeocha-factor-risk-model.streamlit.app"
+       target="_blank" rel="noopener">launch the live dashboard →</a>
+  </div>
 </header>
 
 <main class="wrap">
 
   <section id="about" class="anchor">
     <div class="sec-head"><h2>currently</h2><div class="rule"></div></div>
-    <div class="card" style="--flood:#004d00">
+    <div class="card" style="--flood:#F8F8F8">
       <div class="flood"></div>
       <div class="top">
         <div class="icon">fr</div>
@@ -594,9 +608,13 @@ def page() -> str:
       <p>
         All seven engine steps are done, and the whole thing now ships as a
         professional tool: an interactive dashboard and a CLI - both driving the same
-        pipeline - plus a notebook, 31 offline tests, and this page. Set a mandate
+        pipeline - plus a notebook, 32 offline tests, and this page. Set a mandate
         with sliders, hit Run, export CSV/Excel/PDF/HTML.
       </p>
+      <div class="links" style="margin-top:20px">
+        <a class="cta" href="https://seane-zeocha-factor-risk-model.streamlit.app"
+           target="_blank" rel="noopener">launch the live dashboard →</a>
+      </div>
       <div class="links" style="margin-top:20px">
         <span class="stat-pill"><span class="dot done"></span> step 07 · done</span>
         <span class="stat-pill"><span class="dot done"></span> project complete</span>
@@ -647,7 +665,7 @@ def page() -> str:
   </div>
   <p class="privacy-badge">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    privacy - runs fully locally · market data from public sources (Yahoo Finance, Kenneth French Data Library) · nothing is uploaded or shared
+    privacy - the live dashboard runs on Streamlit Cloud · market data from public sources (Yahoo Finance, Kenneth French Data Library) · nothing personal is stored
   </p>
   <p class="foot">© 2026 {AUTHOR} · factor risk model · python · pandas · statsmodels · scipy · matplotlib</p>
 </footer>
