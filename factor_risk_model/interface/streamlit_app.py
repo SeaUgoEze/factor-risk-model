@@ -251,10 +251,8 @@ st.markdown("""
    [data-testid="stAlert"] { opacity: 0; } }
 </style>""", unsafe_allow_html=True)
 
-# ----------------------------------------------------------------------
 # Footer - privacy line pinned to the bottom of the viewport, emitted
 # before any st.stop() so it is visible in every state.
-# ----------------------------------------------------------------------
 st.markdown("""
 <style>
  .frm-footer { position: fixed; left: 0; right: 0; bottom: 0; z-index: 999;
@@ -267,14 +265,12 @@ st.markdown("""
  fully locally · data: Yahoo Finance &amp; Kenneth French Data Library</span></div>
 """, unsafe_allow_html=True)
 
-# ----------------------------------------------------------------------
 # Back-to-top floating button.  A component iframe (scripts run inside
 # it; they do NOT run inside st.markdown) is pinned via parent CSS to
 # the bottom-right, just above the footer bar.  Its script watches the
 # parent's scroll container (capture-phase scroll listener survives
 # framework re-renders) and reveals the button once the user scrolls
 # past the header, with smooth scroll-to-top on click.
-# ----------------------------------------------------------------------
 st.markdown("""
 <style>
  iframe[title="st.iframe"] { position: fixed; right: 20px; bottom: 52px;
@@ -370,12 +366,10 @@ st.iframe(
     height="content",
 )
 
-# ----------------------------------------------------------------------
 # Empty-state graph - a self-drawing equity curve shown under the
 # "Run analysis" hint before the pipeline has run.  One-shot CSS animation
 # on an inline SVG, built from the monochrome tokens.  It only renders in
 # the pre-run branch, so it plays at most once per session.
-# ----------------------------------------------------------------------
 _EMPTY_STATE_GRAPH = """
 <style>
  .frm-empty-graph { display: block; width: 100%; max-width: 620px;
@@ -445,17 +439,13 @@ _EMPTY_STATE_GRAPH = """
 </div>
 """
 
-# ----------------------------------------------------------------------
 # Cached data layer
-# ----------------------------------------------------------------------
 @st.cache_data(show_spinner="Fetching / aligning market data (cached)...")
 def _load(tickers, start, end, model):
     return fetch_app_data(list(tickers), start, end, model)
 
 
-# ----------------------------------------------------------------------
 # Sidebar - all user inputs
-# ----------------------------------------------------------------------
 with st.sidebar:
     st.header(":material/tune: Configuration")
     st.caption("Every control maps to a parameter in "
@@ -536,9 +526,7 @@ with st.sidebar:
     run = st.button(":material/play_arrow: Run analysis", type="primary",
                     width="stretch")
 
-# ----------------------------------------------------------------------
 # Header
-# ----------------------------------------------------------------------
 st.title("Factor-Based Risk & Optimization Model")
 st.caption("Interactive Fama-French factor analysis, mandate-driven portfolio "
            "optimization, risk & stress testing, and anomaly detection. "
@@ -550,9 +538,7 @@ if not run:
     st.markdown(_EMPTY_STATE_GRAPH, unsafe_allow_html=True)
     st.stop()
 
-# ----------------------------------------------------------------------
 # Execute
-# ----------------------------------------------------------------------
 try:
     with st.spinner("Running the pipeline (fetch → regressions → optimize "
                     "→ risk → anomaly)..."):
@@ -570,9 +556,7 @@ except (ValueError, RuntimeError) as exc:
 
 st.session_state["result"] = result
 
-# ----------------------------------------------------------------------
 # Overview + tabs
-# ----------------------------------------------------------------------
 m = result.risk_summary.loc["Optimal"]
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Annualized return", fmt_pct(m["ann_return_%"] / 100))
@@ -591,7 +575,7 @@ tab_exp, tab_opt, tab_risk, tab_str, tab_an, tab_out = st.tabs(
     ["Exposures", "Optimization", "Risk & performance", "Stress test",
      "Anomaly", "Export"])
 
-# ---------------- Exposures ----------------
+# Exposures
 with tab_exp:
     st.subheader("Factor exposures - beta [95% CI]")
     st.caption("Each cell shows the point estimate with its 95% confidence "
@@ -612,7 +596,7 @@ with tab_exp:
     with st.expander("Plain-English factor profiles"):
         st.write(pd.DataFrame({"profile": result.profiles}))
 
-# ---------------- Optimization ----------------
+# Optimization
 with tab_opt:
     st.subheader("Mandate vs achieved")
     st.dataframe(result.optimizer["comparison"].round(3),
@@ -630,7 +614,7 @@ with tab_opt:
         {"weight_%": (result.weights * 100).round(2)}),
         width="stretch")
 
-# ---------------- Risk ----------------
+# Risk
 with tab_risk:
     st.subheader("Headline metrics - optimal vs SPY vs equal weight")
     st.dataframe(result.risk_summary.round(2), width="stretch")
@@ -643,7 +627,7 @@ with tab_risk:
     st.image(str(result.figures["drawdowns"]), width="stretch")
     st.image(str(result.figures["attribution"]), width="stretch")
 
-# ---------------- Stress ----------------
+# Stress
 with tab_str:
     st.subheader("Stylized one-month factor shocks")
     st.caption("Scenario impact = alpha + Σ β_k · shock_k - the factor "
@@ -651,7 +635,7 @@ with tab_str:
     st.dataframe(result.stress.round(2), width="stretch")
     st.image(str(result.figures["stress"]), width="stretch")
 
-# ---------------- Anomaly ----------------
+# Anomaly
 with tab_an:
     st.subheader("Windowed autoencoder on portfolio daily returns")
     for b in result.anomaly_interpretation:
@@ -667,7 +651,7 @@ with tab_an:
             shown[col] = shown[col].round(4)
         st.dataframe(shown, width="stretch")
 
-# ---------------- Export ----------------
+# Export
 with tab_out:
     st.subheader("Download results")
     st.caption("CSV/Excel contain the tables; the PDF and HTML reports are "

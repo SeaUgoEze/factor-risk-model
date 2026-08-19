@@ -50,7 +50,6 @@ class PortfolioAnomalyDetector:
         self.model: Autoencoder | None = None
         self.threshold: float | None = None
 
-    # ------------------------------------------------------------------
     @staticmethod
     def build_windows(returns: pd.Series, window: int) -> tuple[np.ndarray,
                                                                 pd.DatetimeIndex]:
@@ -112,7 +111,6 @@ class PortfolioAnomalyDetector:
             flagged_windows=flagged,
         )
 
-    # ------------------------------------------------------------------
     def interpretation(self, result: AnomalyResult,
                        all_returns: pd.Series) -> list[str]:
         """Plain-English takeaway from a detection run."""

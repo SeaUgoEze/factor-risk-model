@@ -12,9 +12,7 @@ from typing import Sequence
 
 import pandas as pd
 
-# ----------------------------------------------------------------------
 # Input parsing
-# ----------------------------------------------------------------------
 _TICKER_SPLIT = re.compile(r"[,\s;]+")
 
 
@@ -55,9 +53,7 @@ def validate_dates(start: str, end: str) -> tuple[pd.Timestamp, pd.Timestamp]:
     return s, e
 
 
-# ----------------------------------------------------------------------
 # Formatting
-# ----------------------------------------------------------------------
 def fmt_pct(x: float, digits: int = 2) -> str:
     """0.1234 -> '+12.34%'  (sign always shown for deltas)."""
     return f"{x * 100:+.{digits}f}%"
@@ -73,9 +69,7 @@ def report_stamp() -> str:
     return datetime.now().strftime("%Y-%m-%d_%H%M")
 
 
-# ----------------------------------------------------------------------
 # Portfolio return shortcuts
-# ----------------------------------------------------------------------
 def portfolio_returns(returns: pd.DataFrame, weights: pd.Series) -> pd.Series:
     """Monthly returns of a weighted portfolio: r_p = R @ w.
 

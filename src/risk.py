@@ -50,9 +50,7 @@ NEG = "#E5484D"
 YELLOW = "#B4B4B4"
 
 
-# ----------------------------------------------------------------------
 # Core performance metrics
-# ----------------------------------------------------------------------
 def annualized_return(monthly_returns):
     """Geometric annualized return: (prod(1+r))^(12/n) - 1.
 
@@ -155,9 +153,7 @@ def performance_summary(returns, rf_series):
     return pd.DataFrame(rows).T
 
 
-# ----------------------------------------------------------------------
 # Factor attribution
-# ----------------------------------------------------------------------
 def factor_attribution(portfolio_excess, factors, factor_cols=None):
     """Decompose a portfolio's excess return into factor contributions.
 
@@ -200,9 +196,7 @@ def factor_attribution(portfolio_excess, factors, factor_cols=None):
     }
 
 
-# ----------------------------------------------------------------------
 # Charts
-# ----------------------------------------------------------------------
 def plot_cumulative_returns(growth, path=None,
                             title="Cumulative growth - optimal vs benchmark",
                             mode: str = "mono"):

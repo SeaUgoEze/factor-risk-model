@@ -32,9 +32,7 @@ class FactorModel:
         self.name = factor_model
         self.factor_cols = FACTOR_MODELS[factor_model]
 
-    # ------------------------------------------------------------------
     # Core outputs
-    # ------------------------------------------------------------------
     def exposures(self) -> pd.DataFrame:
         """Full statistics table (betas, t/p, 95% CIs, R2) per ticker.
 
@@ -77,9 +75,7 @@ class FactorModel:
         pretty["n"] = table["n"]
         return pretty
 
-    # ------------------------------------------------------------------
     # Rolling exposures (new in the interactive version)
-    # ------------------------------------------------------------------
     def rolling_exposures(self, window: int = 36, step: int = 3
                           ) -> dict[str, pd.DataFrame]:
         """Refit the OLS on a rolling window; return per-factor paths.
@@ -111,9 +107,7 @@ class FactorModel:
         return {k: pd.DataFrame(v, index=pd.DatetimeIndex(dates, name="window_end"))
                 for k, v in paths.items()}
 
-    # ------------------------------------------------------------------
     # Human-readable profile (reuses the engine's plain-English logic)
-    # ------------------------------------------------------------------
     def profiles(self) -> pd.Series:
         """One sentence per ticker describing its factor fingerprint.
 

@@ -36,12 +36,10 @@ def main():
 
     tickers = list(UNIVERSE) + [BENCHMARK]
 
-    # 1) Daily adjusted close prices -----------------------------------
     prices = fetch_daily_prices(tickers, START_DATE, END_DATE)
     print(f"\ndaily prices: {prices.shape[0]} trading days x {prices.shape[1]} tickers")
     print(prices.head(3).round(2).to_string())
 
-    # 2) Fama-French factors -------------------------------------------
     ff3 = fetch_fama_french("3", START_DATE, END_DATE)
     ff5 = fetch_fama_french("5", START_DATE, END_DATE)
     print(f"\nFama-French 3-factor (monthly, {len(ff3)} months in window):")
@@ -49,17 +47,14 @@ def main():
     print(f"\nFama-French 5-factor (monthly, {len(ff5)} months in window):")
     print(ff5.head(3).to_string())
 
-    # 3) Monthly returns ------------------------------------------------
     monthly = to_monthly_returns(prices)
     print("\nmonthly returns, first 3 months:")
     print(monthly.head(3).round(4).to_string())
 
-    # 4) Aligned analysis dataset ---------------------------------------
     ds = build_analysis_dataset(monthly, ff5)
     print("\nstock excess returns (r - rf), first 3 months:")
     print(ds.excess.head(3).round(4).to_string())
 
-    # 5) Sanity checks ---------------------------------------------------
     print("\nsanity checks:")
     print(f"  months in dataset      : {ds.returns.shape[0]} "
           f"(59 = Feb 2015..Dec 2019, first month lost to pct_change)")
@@ -67,7 +62,6 @@ def main():
     print(f"  mean RF (annualized)   : {ds.rf.mean() * 12 * 100:.2f}%")
     print(f"  mean mkt excess (ann.) : {ds.factors['Mkt-RF'].mean() * 12 * 100:.2f}%")
 
-    # 6) Persist for later steps ----------------------------------------
     ds.returns.to_csv(DATA_DIR / "monthly_returns.csv")
     ds.factors.to_csv(DATA_DIR / "factors_monthly.csv")
     ds.excess.to_csv(DATA_DIR / "excess_returns.csv")

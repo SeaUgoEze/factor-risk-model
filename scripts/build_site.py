@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 FIGURES_DIR = ROOT / "figures"
 
-# ---- Site identity --------------------------------------------------------
+# Site identity
 # Update REPO if the repo name differs; SITE_URL is the future GitHub Pages
 # address (docs/ is served from the Pages root, so the page lives at the
 # repo's root URL).
@@ -51,9 +51,7 @@ KEYWORDS = (
     "autoencoder, python"
 )
 
-# ============================================================================
 # Content (single source of truth for the page)
-# ============================================================================
 FACTORS = [
     ("f1", "Market - Mkt−RF",
      "The whole market's excess return over T-bills. Every stock carries "
@@ -225,9 +223,7 @@ def png_size(path: pathlib.Path) -> tuple[int, int]:
     return struct.unpack(">II", head[16:24])
 
 
-# ============================================================================
 # Rendering helpers
-# ============================================================================
 def render_model_rows() -> str:
     rows = []
     for no, name, d, tag in FACTORS:
@@ -336,9 +332,7 @@ def seo_head() -> str:
 """
 
 
-# ============================================================================
 # The page
-# ============================================================================
 CSS = """
   :root {
     --bg: #101018; --fg: #F8F8F8; --grid-line: rgba(248,248,248,0.05);

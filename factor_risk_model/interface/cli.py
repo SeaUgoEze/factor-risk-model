@@ -78,7 +78,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    # ---- terminal summary --------------------------------------------
+    # Terminal summary
     print("EXPOSURES (beta [95% CI]):")
     print(result.exposures[["alpha"] +
                            [f"beta_{k}" for k in
@@ -101,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
     for w in result.optimization_warnings:
         print(f"\nWARNING: {w}")
 
-    # ---- exports ------------------------------------------------------
+    # Exports
     if args.export != "none":
         out_dir = args.out / report_stamp()
         if args.export in ("csv", "all"):

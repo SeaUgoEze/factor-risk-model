@@ -88,9 +88,7 @@ def apply_style():
     })
 
 
-# ----------------------------------------------------------------------
 # Covariance / correlation
-# ----------------------------------------------------------------------
 def factor_covariance(factors):
     """Monthly covariance & correlation matrices + annualized factor vol.
 
@@ -102,9 +100,7 @@ def factor_covariance(factors):
     return cov, corr, vol_ann
 
 
-# ----------------------------------------------------------------------
 # Heatmaps
-# ----------------------------------------------------------------------
 def _recolor_annotations(ax, values, cmap, norm):
     """Set per-cell annotation color from background luminance (readable on dark)."""
     values = np.asarray(values)
@@ -286,9 +282,7 @@ def correlation_heatmap(corr, path=None, mode: str = "mono"):
     return path
 
 
-# ----------------------------------------------------------------------
 # Plain-English profiles
-# ----------------------------------------------------------------------
 def plain_english_profile(row):
     """One human-readable sentence describing a stock's factor fingerprint.
 

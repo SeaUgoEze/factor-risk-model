@@ -44,7 +44,6 @@ def main():
           f"{len(UNIVERSE)} stocks | optimal portfolio from Step 4")
     print("=" * 92)
 
-    # ---- rebuild the aligned dataset + optimal weights -------------------
     tickers = list(UNIVERSE) + [BENCHMARK]
     prices = fetch_daily_prices(tickers, START_DATE, END_DATE)
     ff5 = fetch_fama_french("5", START_DATE, END_DATE)
@@ -74,12 +73,10 @@ def main():
     })
     rf = ds.rf
 
-    # ---- 1) headline performance table ------------------------------------
     print("\n1) PERFORMANCE SUMMARY (monthly, 2015-2019):")
     table = performance_summary(perf, rf)
     print(table.round(2).to_string())
 
-    # ---- 2) VaR / CVaR detail for the optimal portfolio -------------------
     print("\n2) TAIL RISK - OPTIMAL PORTFOLIO (monthly, 95% confidence):")
     print(f"  historical VaR = {historical_var(r_opt) * 100:.2f}%   "
           f"(worst month expected 5% of the time)")
@@ -93,7 +90,6 @@ def main():
     print("  below the normal-VaR boundary, while CVaR (the average loss once")
     print("  VaR is breached) captures the severity of the tail beyond it.")
 
-    # ---- 3) factor attribution ---------------------------------------------
     print("\n3) FACTOR ATTRIBUTION (what drives the optimal portfolio's returns):")
     attr = factor_attribution(r_opt - rf, ds.factors)
     contrib = attr["contributions"] * 100
@@ -113,12 +109,10 @@ def main():
     print(f"  annualized excess return: arithmetic = {ann_arith:.2f}%  "
           f"|  geometric (compounded) = {ann_geom:.2f}%")
 
-    # ---- 4) correlation of largest holdings --------------------------------
     top = w_opt.reindex(stocks).abs().sort_values(ascending=False).head(12)
     hold_corr = ds.returns[top.index].corr()
     print(f"\n4) HOLDINGS CORRELATION: {len(top)} largest weights by |w|")
 
-    # ---- figures -----------------------------------------------------------
     growth = (1.0 + perf).cumprod()
     plot_cumulative_returns(growth, FIGURES_DIR / "cumulative_returns.png",
                             title="Cumulative growth - optimal vs benchmark "
@@ -129,7 +123,6 @@ def main():
                      FIGURES_DIR / "factor_attribution.png")
     plot_holdings_corr(hold_corr, FIGURES_DIR / "holdings_correlation.png")
 
-    # ---- persistence -------------------------------------------------------
     table.round(4).to_csv(OUTPUTS_DIR / "performance_summary.csv")
     contrib_out = attr["contributions"].round(4).to_frame("ann_contribution")
     contrib_out.loc["alpha"] = round(attr["alpha_ann"], 4)

@@ -89,7 +89,7 @@ CONTENTS_LABELS = {
     "anomaly": "Anomaly detection",
 }
 
-# ---- small shared helpers -------------------------------------------------
+# Shared helpers
 
 def _table(result, name):
     """Pull a table out of the result, normalizing dicts to frames."""
@@ -144,7 +144,7 @@ def export_csv(result, out_dir: Path) -> list[Path]:
     return written
 
 
-# ---- Excel ----------------------------------------------------------------
+# Excel
 
 def _summary_rows(result) -> pd.DataFrame:
     """Front sheet: report meta, headline metrics, key findings."""
@@ -183,7 +183,7 @@ def export_excel(result, dest) -> object:
             frame = _table(result, name)
             if frame is not None:
                 frame.to_excel(writer, sheet_name=name[:31])
-        # ---- style pass over the freshly written workbook ----
+        # Style pass
         from openpyxl.styles import Alignment, Font, PatternFill
         from openpyxl.utils import get_column_letter
 
@@ -226,7 +226,7 @@ def export_excel(result, dest) -> object:
     return dest
 
 
-# ---- HTML -----------------------------------------------------------------
+# HTML
 
 _CSS = """
  :root { --ink: #101418; --ink-soft: #3a4148; --accent: #004d00;
@@ -387,7 +387,7 @@ def export_html(result, dest) -> object:
     return dest
 
 
-# ---- PDF ------------------------------------------------------------------
+# PDF
 
 INK = "#101418"        # near-black body text
 INK_SOFT = "#3a4148"    # muted secondary text
@@ -490,7 +490,7 @@ def export_pdf(result, figures: dict[str, Path], dest) -> object:
     page_no = 1
 
     with PdfPages(dest) as pdf:
-        # ---- cover / metrics page ----
+        # Cover / metrics page
         fig = plt.figure(figsize=(8.5, 11))
         fig.patch.set_facecolor("white")
         ax = fig.add_axes([0.08, 0.05, 0.84, 0.90])
@@ -521,7 +521,7 @@ def export_pdf(result, figures: dict[str, Path], dest) -> object:
         uy = (te.y0 - ae.y0) / ae.height - 5 / ae.height
         ax.plot([ux0, ux1], [uy, uy], color=INK, lw=1.3,
                 transform=ax.transAxes)
-        # ---- Contents: every chart page with its page number ----
+        # Contents
         # Two columns of entries with dotted leaders; the leaders are drawn
         # from the measured end of each label to the measured start of its
         # page number, so no line ever crosses the text.
@@ -599,8 +599,7 @@ def export_pdf(result, figures: dict[str, Path], dest) -> object:
         pdf.savefig(fig)
         plt.close(fig)
 
-        # ---- one page per chart, in reading order (matching the
-        #      Contents page numbers) ----
+        # Chart pages
         for _key, title, caption, img in chart_pages:
             page_no += 1
             _chart_page(pdf, img, title, caption, page_no, generated)

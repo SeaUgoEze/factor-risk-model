@@ -41,7 +41,6 @@ def main():
           f"{len(UNIVERSE)} stocks + {BENCHMARK} | 5-factor model")
     print("=" * 92)
 
-    # ---- rebuild dataset + exposures (cached, fast) --------------------
     tickers = list(UNIVERSE) + [BENCHMARK]
     prices = fetch_daily_prices(tickers, START_DATE, END_DATE)
     ff5 = fetch_fama_french("5", START_DATE, END_DATE)
@@ -49,7 +48,6 @@ def main():
     ds = build_analysis_dataset(monthly, ff5)
     t5 = exposure_table(ds.excess, ds.factors, MODEL_5F)
 
-    # ---- factor covariance structure ------------------------------------
     cov, corr, vol_ann = factor_covariance(ds.factors)
 
     print("\nANNUALIZED FACTOR VOLATILITY (%):")
@@ -61,19 +59,16 @@ def main():
     print("\nFACTOR CORRELATION MATRIX:")
     print(corr.round(3).to_string())
 
-    # ---- figures ---------------------------------------------------------
     print()
     exposure_heatmap(t5, MODEL_5F, UNIVERSE, FIGURES_DIR / "factor_exposures_heatmap.png")
     correlation_heatmap(corr, FIGURES_DIR / "factor_correlation_heatmap.png")
 
-    # ---- plain-English profiles -------------------------------------------
     print("\nWHAT EACH STOCK'S BETAS SAY (plain English):")
     profiles = t5.apply(plain_english_profile, axis=1)
     for ticker, profile in profiles.items():
         marker = "  <-- benchmark" if ticker == BENCHMARK else ""
         print(f"  {ticker:5s}  {profile}{marker}")
 
-    # ---- persist -----------------------------------------------------------
     cov.to_csv(DATA_DIR / "factor_covariance.csv")
     corr.to_csv(DATA_DIR / "factor_correlation.csv")
     profiles.to_csv(DATA_DIR / "factor_profiles.csv", header=["profile"])

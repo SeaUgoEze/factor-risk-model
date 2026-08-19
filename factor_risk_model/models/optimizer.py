@@ -32,7 +32,6 @@ class PortfolioOptimizer:
         self.betas = model.betas()
         self.idio_var = model.idio_var()
 
-    # ------------------------------------------------------------------
     def optimize(self, targets: dict, tolerance: float = 0.10,
                  allow_shorts: bool = True, short_floor: float = -0.10,
                  initial: pd.Series | None = None) -> dict:

@@ -40,9 +40,7 @@ NEG = "#E5484D"
 YELLOW = "#B4B4B4"
 
 
-# ----------------------------------------------------------------------
 # The autoencoder
-# ----------------------------------------------------------------------
 class Autoencoder:
     """Fully-connected autoencoder with explicit numpy backpropagation.
 
@@ -179,9 +177,7 @@ class Autoencoder:
         return np.mean((out - X) ** 2, axis=1)
 
 
-# ----------------------------------------------------------------------
 # PCA baseline (a *linear* autoencoder)
-# ----------------------------------------------------------------------
 def pca_reconstruction_errors(X, n_components=3, fit_X=None):
     """Reconstruction errors of PCA with n_components latent dims.
 
@@ -197,9 +193,7 @@ def pca_reconstruction_errors(X, n_components=3, fit_X=None):
     return np.mean((rebuilt - X) ** 2, axis=1)
 
 
-# ----------------------------------------------------------------------
 # Anomaly scoring
-# ----------------------------------------------------------------------
 def detect_anomalies(errors, reference=None, threshold_sigma=2.0):
     """Flag samples whose error exceeds mean + k*sigma of the reference.
 
@@ -214,9 +208,7 @@ def detect_anomalies(errors, reference=None, threshold_sigma=2.0):
     return flags, threshold
 
 
-# ----------------------------------------------------------------------
 # Chart
-# ----------------------------------------------------------------------
 def plot_anomalies(portfolio_cum, recon_errors, flags, threshold, months,
                    path=None, threshold_sigma=2.0,
                    title="Autoencoder anomaly detection - monthly cross-section"):

@@ -112,13 +112,13 @@ def run_pipeline(tickers, start: str, end: str,
     figures_dir = Path(figures_dir)
     figures_dir.mkdir(parents=True, exist_ok=True)
 
-    # ---- 1. data -----------------------------------------------------
+    # 1. data
     if app_data is None:
         app_data = fetch_app_data(tickers, start, end, factor_model)
     model = FactorModel(app_data, factor_model)
     optimizer = PortfolioOptimizer(model)
 
-    # ---- 2. exposures + optimization --------------------------------
+    # 2. exposures + optimization
     table = model.exposures()
     betas, idio_var = model.betas(), model.idio_var()
     mandate = dict(targets or {k: 1.0 if k == "Mkt-RF" else 0.0
@@ -128,7 +128,7 @@ def run_pipeline(tickers, start: str, end: str,
                                   short_floor=short_floor, max_vol=max_vol)
     weights = result["weights"]
 
-    # ---- 3. risk -----------------------------------------------------
+    # 3. risk
     analyzer = RiskAnalyzer(app_data, model, optimizer, weights,
                             tickers=app_data.tickers)
     summary = analyzer.summary()
@@ -136,7 +136,7 @@ def run_pipeline(tickers, start: str, end: str,
     attr = analyzer.attribution()
     stress = analyzer.stress_scenarios()
 
-    # ---- 4. anomaly (windowed autoencoder on daily returns) ----------
+    # 4. anomaly
     daily_ret = app_data.daily_prices[tickers].pct_change().dropna(
         how="all").fillna(0.0)
     port_daily = portfolio_returns(daily_ret, weights)
@@ -144,7 +144,7 @@ def run_pipeline(tickers, start: str, end: str,
     detector.fit(port_daily)
     anomaly = detector.detect(port_daily)
 
-    # ---- 5. figures --------------------------------------------------
+    # 5. figures
     growth = pd.DataFrame({
         "Optimal": (1 + analyzer.portfolio).cumprod(),
         "SPY": (1 + analyzer.spy).cumprod() if analyzer.spy is not None else None,
@@ -190,7 +190,7 @@ def run_pipeline(tickers, start: str, end: str,
         figures["rolling"] = plots.plot_rolling_exposures(
             rolling, first, figures_dir / "rolling.png")
 
-    # ---- 6. interpretation -------------------------------------------
+    # 6. interpretation
     interpretation = analyzer.interpretation()
     anomaly_interpretation = detector.interpretation(anomaly, port_daily)
     interpretation += anomaly_interpretation

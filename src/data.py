@@ -34,9 +34,7 @@ import pandas as pd
 from src.config import DATA_DIR
 
 
-# ----------------------------------------------------------------------
 # Yahoo Finance daily prices
-# ----------------------------------------------------------------------
 def fetch_daily_prices(tickers, start, end, cache=True, force_refresh=False):
     """Fetch daily adjusted close prices for `tickers` between start/end.
 
@@ -109,9 +107,7 @@ def _download_batch(tickers, start, end, threads=True):
     return close
 
 
-# ----------------------------------------------------------------------
 # Kenneth French factor data
-# ----------------------------------------------------------------------
 def fetch_fama_french(model="5", start=None, end=None, cache=True, force_refresh=False):
     """Fetch monthly Fama-French factor returns.
 
@@ -200,9 +196,7 @@ def _download_fama_french_direct(dataset):
     return df
 
 
-# ----------------------------------------------------------------------
 # Price -> monthly return conversion
-# ----------------------------------------------------------------------
 def to_monthly_returns(daily_prices):
     """Convert daily prices to month-end simple returns.
 
@@ -215,9 +209,7 @@ def to_monthly_returns(daily_prices):
     return returns
 
 
-# ----------------------------------------------------------------------
 # Alignment
-# ----------------------------------------------------------------------
 @dataclass
 class AnalysisData:
     """Aligned, ready-to-regress monthly dataset (Steps 2-6 input)."""

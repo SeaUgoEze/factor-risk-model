@@ -72,9 +72,7 @@ class RiskAnalyzer:
         self.equal_w = equal_weight_returns(self.returns[self.tickers])
         self.spy = self.returns[BENCHMARK] if BENCHMARK in self.returns else None
 
-    # ------------------------------------------------------------------
     # Headline metrics
-    # ------------------------------------------------------------------
     def summary(self) -> pd.DataFrame:
         """Annualized return/vol/Sharpe/max-DD/VaR/CVaR for optimal vs refs."""
         frame = {"Optimal": self.portfolio}
@@ -103,9 +101,7 @@ class RiskAnalyzer:
         """Drawdown path of the optimal portfolio."""
         return drawdown_series(self.portfolio)
 
-    # ------------------------------------------------------------------
     # Stress tests (new)
-    # ------------------------------------------------------------------
     def stress_scenarios(self) -> pd.DataFrame:
         """One-month portfolio impact per scenario, vs SPY and equal weight.
 
@@ -134,9 +130,7 @@ class RiskAnalyzer:
             }
         return pd.DataFrame(rows).T.round(2)
 
-    # ------------------------------------------------------------------
     # Interpretation (plain English, drives the UI + PDF)
-    # ------------------------------------------------------------------
     def interpretation(self) -> list[str]:
         """Auto-generated bullet summary of the whole risk picture."""
         s = self.summary()

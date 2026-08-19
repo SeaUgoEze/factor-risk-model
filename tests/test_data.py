@@ -8,9 +8,7 @@ from factor_risk_model.data.data_fetcher import fetch_app_data
 from factor_risk_model.utils.helpers import normalize_tickers, validate_dates
 
 
-# ----------------------------------------------------------------------
 # Alignment
-# ----------------------------------------------------------------------
 def test_aligned_dataset_shares_one_index(app_data):
     ds = app_data.ds
     assert (ds.returns.index == ds.factors.index).all()
@@ -38,9 +36,7 @@ def test_custom_ticker_gets_other_sector(app_data):
     assert app_data.sector_map["AAPL"] == "Technology"
 
 
-# ----------------------------------------------------------------------
 # Input validation (no network needed)
-# ----------------------------------------------------------------------
 def test_unknown_ticker_raises_friendly_error(monkeypatch):
     """A ticker with no price data must raise ValueError, not vanish."""
     import factor_risk_model.data.data_fetcher as df_mod
@@ -75,9 +71,7 @@ def test_reversed_dates_raise():
         validate_dates("2019-12-31", "2015-01-01")
 
 
-# ----------------------------------------------------------------------
 # Parsing helpers
-# ----------------------------------------------------------------------
 def test_normalize_tickers():
     assert normalize_tickers("aapl, MSFT googl;TSLA") == \
         ["AAPL", "MSFT", "GOOGL", "TSLA"]

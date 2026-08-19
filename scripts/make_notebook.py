@@ -29,9 +29,7 @@ def code(src):
 
 cells = []
 
-# ======================================================================
 # Title
-# ======================================================================
 cells.append(md("""
 # Factor-Based Risk & Optimization Model
 
@@ -52,9 +50,7 @@ numbers and charts from the cached dataset.
 | 7 | Key takeaways and limitations |
 """))
 
-# ======================================================================
 # Setup
-# ======================================================================
 cells.append(md("""
 ## 0 · Setup
 
@@ -99,9 +95,7 @@ except ImportError:
 print(f"project root: {ROOT}")
 """))
 
-# ======================================================================
 # Step 1
-# ======================================================================
 cells.append(md("""
 ## 1 · Data acquisition & preparation
 
@@ -139,9 +133,7 @@ cells.append(md("""
 - **The factor columns** are `Mkt-RF` (market), `SMB` (size), `HML` (value), `RMW` (profitability), `CMA` (investment).
 """))
 
-# ======================================================================
 # Step 2
-# ======================================================================
 cells.append(md("""
 ## 2 · Factor exposures (OLS betas)
 
@@ -179,9 +171,7 @@ for k in MODEL_5F:
           f"high: {', '.join(f'{i}({v:+.2f})' for i, v in tb.tail(2).items())}")
 """))
 
-# ======================================================================
 # Step 3
-# ======================================================================
 cells.append(md("""
 ## 3 · Factor analysis & interpretation
 
@@ -217,9 +207,7 @@ for t in ["NVDA", "BAC", "KO", "WMT", "MRK"]:
 print("\\n(all 26 profiles saved to data/factor_profiles.csv in the full script)")
 """))
 
-# ======================================================================
 # Step 4
-# ======================================================================
 cells.append(md("""
 ## 4 · Portfolio optimization with factor targeting
 
@@ -276,9 +264,7 @@ pd.DataFrame(cmp).to_csv("data/optimization_summary.csv")
 print("weights saved to data/portfolio_weights_shorts.csv")
 """))
 
-# ======================================================================
 # Step 5
-# ======================================================================
 cells.append(md("""
 ## 5 · Performance & risk analysis
 
@@ -336,9 +322,7 @@ show("factor_attribution.png")
 show("holdings_correlation.png")
 """))
 
-# ======================================================================
 # Step 6
-# ======================================================================
 cells.append(md("""
 ## 6 · Anomaly detection with autoencoders
 
@@ -398,9 +382,7 @@ plot_anomalies(cum, errors, flags, threshold, Xs.index, threshold_sigma=2.0)
 show("anomaly_detection.png")
 """))
 
-# ======================================================================
 # Step 7 - reflections
-# ======================================================================
 cells.append(md("""
 ## 7 · Key takeaways
 
@@ -467,9 +449,7 @@ though the optimizer won), and *CVaR > VaR* as the coherent tail measure.
 public data - nothing is simulated or hand-inserted. Rerun any cell to regenerate it.*
 """))
 
-# ======================================================================
 # Build & save
-# ======================================================================
 nb = nbf.v4.new_notebook(
     cells=cells,
     metadata={

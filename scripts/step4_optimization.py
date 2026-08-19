@@ -44,7 +44,6 @@ def main():
           f"{len(UNIVERSE)} stocks | 5-factor model | SLSQP")
     print("=" * 92)
 
-    # ---- rebuild dataset + betas + factor covariance --------------------
     tickers = list(UNIVERSE) + [BENCHMARK]
     prices = fetch_daily_prices(tickers, START_DATE, END_DATE)
     ff5 = fetch_fama_french("5", START_DATE, END_DATE)
@@ -57,13 +56,11 @@ def main():
     cov_f = ds.factors.cov()                         # factor covariance (Step 3)
     idio_var = t5["resid_sd"] ** 2                   # idiosyncratic variance
 
-    # ---- the mandate ------------------------------------------------------
     TARGETS = {"Mkt-RF": 1.0, "SMB": 0.5, "HML": 1.0, "RMW": 0.0, "CMA": 0.0}
     TOL = 0.10
     print("\nMANDATE (target factor profile, tolerance +/- %.2f):" % TOL)
     print(pd.Series(TARGETS).to_string())
 
-    # ---- benchmark: equal weight -------------------------------------------
     n = len(betas)
     ew = np.full(n, 1.0 / n)
     ew_sum = summarize(ew, betas, cov_f, idio_var)
@@ -72,7 +69,6 @@ def main():
     print(f"  total vol (ann.) = {ew_sum['total_vol_ann']:.2f}%  "
           f"(factor {ew_sum['factor_vol_ann']:.2f}% + idio {ew_sum['idio_vol_ann']:.2f}%)")
 
-    # ---- 1) long-only -------------------------------------------------------
     print("\n" + "-" * 92)
     print("SCENARIO 1 - LONG-ONLY (w >= 0), minimize variance vs mandate")
     lo = target_factor_portfolio(betas, cov_f, idio_var, TARGETS, tolerance=TOL)
@@ -98,7 +94,6 @@ def main():
           f"factor {lo['factor_vol_ann']:.2f}% + idio {lo['idio_vol_ann']:.2f}%   "
           f"(factor share {lo['factor_share'] * 100:.1f}%)")
 
-    # ---- 2) limited shorts ----------------------------------------------------
     print("\n" + "-" * 92)
     print("SCENARIO 2 - LIMITED SHORTS (w >= -0.10), same mandate")
     ls = target_factor_portfolio(betas, cov_f, idio_var, TARGETS,
@@ -113,7 +108,6 @@ def main():
     print(f"\n  portfolio vol (ann.) = {ls['total_vol_ann']:.2f}%   "
           f"(long-only was {lo['total_vol_ann']:.2f}%)")
 
-    # ---- figure + persistence ------------------------------------------------
     # Chart the FEASIBLE solution (limited shorts) - the one that meets the
     # mandate; the long-only effort is discussed in the text output.
     plot_weights(ls["weights"], FIGURES_DIR / "portfolio_weights.png",

@@ -39,7 +39,6 @@ def main():
           f"{len(UNIVERSE)} stocks | 59 monthly cross-sections")
     print("=" * 92)
 
-    # ---- data: the monthly cross-section of stock returns ----------------
     tickers = list(UNIVERSE) + [BENCHMARK]
     prices = fetch_daily_prices(tickers, START_DATE, END_DATE)
     ff5 = fetch_fama_french("5", START_DATE, END_DATE)
@@ -56,7 +55,6 @@ def main():
     Xs = (X - mu) / sd
     X_train, X_val = Xs.iloc[:n_train], Xs.iloc[n_train:]
 
-    # ---- train the autoencoder -------------------------------------------
     print(f"\n1) TRAINING autoencoder ({X.shape[1]} -> 10 -> 3 -> 10 -> "
           f"{X.shape[1]}), early stopping on the last {len(X_val)} months")
     ae = Autoencoder(input_dim=X.shape[1], hidden_dim=10, latent_dim=3, seed=0)
@@ -66,7 +64,6 @@ def main():
           f"best val loss = {ae.best_val:.5f}  |  "
           f"epochs used = {len(ae.train_loss)}")
 
-    # ---- reconstruction errors + anomaly flags -----------------------------
     errors = ae.errors(Xs.values)
     flags, threshold = detect_anomalies(errors, reference=errors[:n_train])
     flagged_months = Xs.index[flags]
@@ -74,7 +71,6 @@ def main():
     print(f"   flagged {int(flags.sum())}/{len(Xs)} months: "
           f"{[m.strftime('%b %Y') for m in flagged_months]}")
 
-    # ---- cross-check with the portfolio's own worst months -----------------
     # Optimal portfolio monthly returns from the Step-4 weights
     w = pd.read_csv(DATA_DIR / "portfolio_weights_shorts.csv",
                     index_col=0).iloc[:, 0].reindex(stocks).fillna(0.0)
@@ -93,7 +89,6 @@ def main():
     else:
         print("   (none flagged - the model found every month 'normal')")
 
-    # ---- PCA baseline: a LINEAR autoencoder ---------------------------------
     pca_err = pca_reconstruction_errors(Xs.values, n_components=3,
                                         fit_X=X_train.values)
     pca_flags, _ = detect_anomalies(pca_err, reference=pca_err[:n_train])
@@ -103,12 +98,10 @@ def main():
           f"autoencoder -> the nonlinear model adds "
           f"{int(flags.sum()) - overlap} month(s) the linear one missed")
 
-    # ---- figure: error lens above portfolio wealth path ---------------------
     cum = (1.0 + r_opt).cumprod()
     plot_anomalies(cum, errors, flags, threshold, Xs.index,
                    FIGURES_DIR / "anomaly_detection.png", threshold_sigma=2.0)
 
-    # ---- persistence ---------------------------------------------------------
     summary = pd.DataFrame({
         "recon_error": errors,
         "flagged": flags,
