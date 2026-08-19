@@ -7,8 +7,7 @@ Two independent data sources:
      -> daily *adjusted* close prices for our stock universe and SPY.
         Adjusted close re-states history as if all dividends were
         reinvested and all splits already happened, so simple returns
-        computed from it are total returns.  We use Close because the
-        Fama-French factors are price-return based.
+        computed from it are total returns.
 
   2. Kenneth French Data Library (via `pandas_datareader`, with a
      direct-download fallback)
@@ -20,10 +19,8 @@ Two independent data sources:
           CMA    : Conservative Minus Aggressive (investment factor)
           RF     : one-month T-bill rate
 
-Why monthly?  The factors are monthly, so we convert daily prices to
-monthly returns and align on the same month-end calendar.  Monthly is
-also the convention in academic asset pricing: daily betas are noisy
-because of liquidity / bid-ask effects.
+The factors are monthly, so we convert daily prices to monthly returns
+and align on the same month-end calendar.
 """
 from __future__ import annotations
 
@@ -233,9 +230,8 @@ class AnalysisData:
 def build_analysis_dataset(monthly_returns, ff_factors):
     """Align stock returns and factor returns on the same month-end index.
 
-    Excess return = stock return - RF.  In asset pricing we explain
-    *excess* returns with factor returns (the risk-free asset earns no
-    factor risk premium by construction).
+    Excess return = stock return - RF.  In asset pricing, excess returns
+    are explained by factor returns.
     """
     factor_cols = ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "RF"]
     factor_cols = [c for c in factor_cols if c in ff_factors.columns]

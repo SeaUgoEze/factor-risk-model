@@ -19,7 +19,7 @@ Two layers, one pipeline:
 
 The project mirrors how institutional asset managers build portfolios: a **mandate** sets
 target factor exposures, an **optimizer** realizes them at minimum risk, and a **risk
-engine** stress-tests the result - with the honest caveats written down (see *Limitations*).
+engine** stress-tests the result - with the caveats written down (see *Limitations*).
 
 ---
 
@@ -47,7 +47,7 @@ python scripts/build_site.py          # regenerates docs/ (HTML + robots.txt + s
 
 First run downloads + caches the market data under `data/`; afterwards everything is
 instant and offline. Run the original step scripts (`python scripts/step1_fetch.py` …)
-for the engine's printed, paper-style walkthrough.
+for the engine's printed walkthrough.
 
 ---
 
@@ -106,13 +106,14 @@ chrome stays grayscale in both modes):
   green `#2EA043` for gains/positive loadings, the downside red `#E5484D` for
   losses, amber `#D29922` for the equal-weight comparison series, and a
   red-to-neutral-to-green ramp on the exposure/correlation heatmaps so
-  positive vs negative loadings read at a glance. No blue appears anywhere.
+  positive vs negative loadings read at a glance. No blue appears anywhere
+  in semantic mode; the monochrome heatmaps annotate sign in red/blue.
 
 > **Why "vol budget" is a warning, not a constraint.** The optimizer *minimizes*
 > variance for a fixed mandate, so achieved volatility is an output, not an input. A
 > budget above the minimum is automatically satisfied; below it is mathematically
-> impossible while still hitting the mandate. So the app reports the conflict honestly
-> instead of pretending to control an output - a deliberate design choice.
+> impossible while still hitting the mandate. So the app reports the conflict
+> instead of pretending to control an output.
 
 ### CLI
 
@@ -161,7 +162,7 @@ docs/index.html                   the live project page
 | 1 | **Data acquisition** | Daily prices for 26 S&P 500 names across 8 sectors + SPY (Yahoo Finance, cached); monthly Fama-French 3- or 5-factor returns (Kenneth French library, direct-download fallback). Aligned to 59 clean monthly observations. |
 | 2 | **Factor exposures** | OLS of every stock's excess returns on the factors → betas, t-stats, **95% CIs**, R², residual vol. SPY validates the pipeline (β_mkt ≈ 0.99, R² ≈ 0.997). |
 | 3 | **Factor analysis** | Exposure heatmap, factor covariance/correlation, annualized factor vols, plain-English profiles. |
-| 4 | **Portfolio optimization** | Variance-minimizing portfolio hitting a target factor profile via `scipy.optimize` (SLSQP + trust-constr fallback). Long-only vs limited-shorts with honest feasibility. |
+| 4 | **Portfolio optimization** | Variance-minimizing portfolio hitting a target factor profile via `scipy.optimize` (SLSQP + trust-constr fallback). Long-only vs limited-shorts with feasibility. |
 | 5 | **Performance & risk** | Backtest vs SPY and equal weight: return/vol/Sharpe, max drawdown, historical + parametric VaR, CVaR, factor attribution. |
 | 6 | **Anomaly detection** | Hand-rolled numpy autoencoder (explicit backprop, Adam, early stopping) scores co-movement structure; reconstruction error flags unexplained months. |
 | 7 | **Docs & notebook** | README + `notebooks/factor_risk_model.ipynb`, a fully runnable version of every step. |
@@ -182,7 +183,7 @@ window, empty selection), and a <30 s performance budget on the full pipeline.
 
 ---
 
-## Key findings (the honest version)
+## Key findings
 
 1. **The pipeline validates itself.** SPY loads at β_mkt = 0.989 with R² = 0.997 - the
    benchmark behaves exactly like the market, so downstream numbers are believable.

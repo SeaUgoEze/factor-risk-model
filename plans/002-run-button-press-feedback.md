@@ -1,6 +1,6 @@
 # 002 — Add press feedback to the Run button
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: N/A — the working copy is unversioned (the `.git/` folder was removed by the user)
 - **Severity**: LOW
 - **Category**: Missed opportunities (feedback gap)

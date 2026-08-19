@@ -1,6 +1,6 @@
 # 003 — Fade the pre-run info box in on load
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: N/A — the working copy is unversioned (the `.git/` folder was removed by the user)
 - **Severity**: LOW
 - **Category**: Missed opportunities (first-view composition)

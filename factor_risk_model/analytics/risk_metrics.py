@@ -12,12 +12,11 @@ expected one-month excess return:
     r_p - rf  ~  alpha + sum_k beta_k * shock_k
 
 so the scenario impact follows directly from the estimated exposures -
-no simulation needed, just the factor model itself.  SPY's impact is the
-same formula with its own loadings (beta ~ 1 on the market, ~ 0
-elsewhere), which makes the comparison clean.
+no simulation needed.  SPY's impact is the same formula with its own
+loadings (beta ~ 1 on the market, ~ 0 elsewhere).
 
-The shocks below are *stylized* reconstructions of real episodes for
-teaching - they are illustrative magnitudes, not backtested values.
+The shocks below are stylized reconstructions of real episodes, not
+backtested values.
 """
 from __future__ import annotations
 
@@ -56,8 +55,7 @@ SCENARIOS: dict[str, dict[str, float]] = {
 
 
 class RiskAnalyzer:
-    """One object that answers every 'how did it do / what could hurt it'
-    question for the optimized portfolio."""
+    """Performance, tail risk, attribution and stress tests for the optimized portfolio."""
 
     def __init__(self, app_data: AppData, model: FactorModel,
                  optimizer: PortfolioOptimizer, weights: pd.Series,

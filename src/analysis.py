@@ -13,15 +13,15 @@ Why the covariance matrix matters: a portfolio's factor-risk is
 
     Risk(portfolio) ~ w' * B' * V_f * B * w + idiosyncratic terms,
 
-so the factor covariance V_f is the engine room of Step 4's optimizer.
-Correlated factors (e.g. value vs. profitability) mean you cannot treat
-each factor bet as an independent risk bet.
+so the factor covariance V_f drives Step 4's optimizer.  Correlated
+factors (e.g. value vs. profitability) mean the factor bets are not
+independent risks.
 """
 from __future__ import annotations
 
 import matplotlib
 
-matplotlib.use("Agg")          # headless-safe backend (no GUI needed)
+matplotlib.use("Agg")          # headless-safe backend
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -31,21 +31,14 @@ from matplotlib.patches import Patch
 
 from src.config import FIGURES_DIR
 
-# Grayscale diverging ramp for heatmaps - dark gray at the negative
-# extreme, mid gray at zero, light gray at the positive extreme, so the
-# whole chart family stays monochrome like the reference palette.  The
-# three stops sit far apart in luminance (near-black / mid / near-white)
-# so positive, neutral and negative loadings read as three distinct
-# bands instead of one muddy gradient.  The mid stop is deliberately
-# dark so the sign-coloured annotations keep contrast across the widest
-# possible range of cell values.
+# Grayscale diverging ramp for heatmaps: dark at the negative extreme,
+# light at the positive extreme, mid at zero.  The three stops are far
+# apart in luminance so the sign-coloured annotations keep contrast.
 GP_DIVERGING = LinearSegmentedColormap.from_list(
     "gp_diverging", ["#1E1E26", "#4E4E57", "#F1F1F1"])
 
-# Semantic diverging ramp - muted red at the negative extreme, neutral
-# gray at zero, muted deep green at the positive extreme.  The hues stay
-# inside the app's family (the same red already reserved for downside);
-# deliberately no blue anywhere.
+# Semantic diverging ramp: muted red (negative) -> gray (zero) ->
+# muted deep green (positive), matching the app's semantic palette.
 GP_DIVERGING_SEMANTIC = LinearSegmentedColormap.from_list(
     "gp_diverging_semantic", ["#B23B3B", "#3A3A42", "#1F8A4C"])
 
@@ -59,13 +52,9 @@ NEG = "#E5484D"
 POS = "#2EA043"
 AMBER = "#D29922"
 # Red/blue sign annotation on the monochrome heatmaps: negative loadings
-# print in red, positive in blue - the classic convention, and the one
-# the module docstring has always promised.  Each sign gets a bright
-# variant for dark cells and a deep variant for light cells, and a
-# contrast floor keeps every number readable.  This blue is the single
-# deliberate exception to the otherwise no-blue palette, added on request
-# as a sign annotation for the heatmap only.
-SIGN_RED = "#FF6A70"   # bright red - light enough to hold contrast on mid grays
+# in red, positive in blue.  Each sign has a bright variant for dark
+# cells and a deep variant for light cells.
+SIGN_RED = "#FF6A70"   # bright red (readable on dark cells)
 SIGN_RED_DARK = "#A62F33"
 SIGN_BLUE = "#86B7EA"
 SIGN_BLUE_DARK = "#1E5FA8"
@@ -119,8 +108,7 @@ def factor_covariance(factors):
 def _recolor_annotations(ax, values, cmap, norm):
     """Set per-cell annotation color from background luminance (readable on dark)."""
     values = np.asarray(values)
-    # seaborn creates one text per cell in row-major data order; fail loudly
-    # if that contract ever changes.
+    # seaborn creates one text per cell in row-major data order.
     assert len(ax.texts) == values.size, "annotation/data cell count mismatch"
     for txt, v in zip(ax.texts, values.ravel()):
         r, g, b, _ = cmap(norm(v))
@@ -145,11 +133,8 @@ def _recolor_annotations_sign(ax, values, cmap, norm, threshold: float = 0.1):
 
     Negative loadings print in red, positive in blue.  Each sign has a
     bright variant for dark cells and a deep variant for light cells;
-    whichever reads better on the cell's background wins, and anything
-    that would fall below a readable contrast floor (e.g. values hugging
-    the neutral mid band, whose sign matters least) stays in the neutral
-    luminance-aware shade instead.  Only used in monochrome mode -
-    semantic mode already encodes sign in the cell fill.
+    whichever reads better on the cell wins, and values below a contrast
+    floor (near-zero loadings) stay neutral.  Only used in monochrome mode.
     """
     values = np.asarray(values)
     assert len(ax.texts) == values.size, "annotation/data cell count mismatch"
@@ -190,8 +175,7 @@ def exposure_heatmap(exposures, factor_cols, sector_map, path=None,
     )
     tbl = tbl.loc[order]
 
-    # Cycle the palette so ANY number of sectors (e.g. the app's 'Other'
-    # bucket for custom tickers) always gets a color - never truncate.
+    # Cycle the palette so any number of sectors still gets a color.
     colors = {s: SECTOR_COLORS[i % len(SECTOR_COLORS)]
               for i, s in enumerate(sectors)}
     label_colors = [colors[sector_map.get(t, "Benchmark")] for t in order]
@@ -215,9 +199,8 @@ def exposure_heatmap(exposures, factor_cols, sector_map, path=None,
     else:
         _recolor_annotations_sign(ax, tbl.values, cmap, norm)
 
-    # Legend BELOW the plot (horizontal) so it never overlaps the heatmap
-    # or the colorbar on the right.  In monochrome mode the sign legend
-    # sits under the sector legend, keyed to the red/blue annotations.
+    # Legend below the plot so it never overlaps the colorbar; in mono
+    # mode a second legend documents the red/blue sign colors.
     handles = [Patch(color=c, label=s) for s, c in colors.items()]
     leg = ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.05),
                     ncol=5, frameon=False, fontsize=8, title="sector",
@@ -309,8 +292,7 @@ def correlation_heatmap(corr, path=None, mode: str = "mono"):
 def plain_english_profile(row):
     """One human-readable sentence describing a stock's factor fingerprint.
 
-    Thresholds are deliberately simple (|beta| > 0.5 = meaningful);
-    the idea is interpretability, not statistical exactness.
+    Thresholds are |beta| > 0.5; the goal is interpretability, not exactness.
     """
     tags = []
     bm = row["beta_Mkt-RF"]

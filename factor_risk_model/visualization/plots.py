@@ -41,8 +41,7 @@ def plot_exposure_ci(betas: pd.Series, ci_lo: pd.Series, ci_hi: pd.Series,
                      mode: str = "mono"):
     """Horizontal bars of a single ticker's betas with CI whiskers.
 
-    A wide whisker means the 59-month sample cannot pin the loading down
-    - the honest visual companion to the exposure table.
+    A wide whisker means the 59-month sample cannot pin the loading down.
     """
     apply_style()
     idx = list(betas.index)

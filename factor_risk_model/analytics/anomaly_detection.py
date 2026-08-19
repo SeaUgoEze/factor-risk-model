@@ -5,13 +5,12 @@ returns through a narrow autoencoder (10 -> 4 -> 2 -> 4 -> 10), train on
 normal periods, and flag windows whose reconstruction error clears the
 95th percentile of training error.
 
-Why windows?  A single daily return is mostly noise; a *sequence* of
-returns encodes the co-movement pattern - and a period where that pattern
-breaks (a crash, a violent rally, a regime shift) reconstructs poorly.
+A single daily return is mostly noise; a sequence of returns encodes the
+co-movement pattern, and a period where that pattern breaks (a crash, a
+violent rally, a regime shift) reconstructs poorly.
 
 The network is the engine's hand-rolled numpy ``Autoencoder`` (tanh MLP,
-explicit backprop, Adam) - no TensorFlow needed.  Same math, transparent
-code, and it trains in seconds on 59 months of data.
+explicit backprop, Adam).
 """
 from __future__ import annotations
 

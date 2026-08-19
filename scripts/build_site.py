@@ -95,7 +95,7 @@ PIPELINE = [
      "co-movement structure too."),
     ("07", "Docs & notebook",
      "Done: README + notebook (25 cells, 10 pedagogy + 15 runnable, all "
-     "verified) and the honest limitations documented."),
+     "verified) and the limitations documented."),
 ]
 
 BUILDS = [
@@ -146,7 +146,7 @@ FINDINGS = [
     ("f2", "The institutional mandate → optimizer → risk loop",
      "This is the mandate → optimizer → risk-autopsy loop used by pension "
      "funds and asset managers: the committee sets the factor risk budget, "
-     "the optimizer allocates at minimum risk (with honest feasibility: "
+     "the optimizer allocates at minimum risk (with feasibility: "
      "'long-only can't do it' is a weekly PM conversation), and the risk "
      "engine measures VaR/CVaR, drawdowns and attribution. The HML↔CMA +0.61 "
      "overlap and CVaR > VaR are institutional-grade talking points."),

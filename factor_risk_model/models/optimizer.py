@@ -6,12 +6,11 @@ to hitting target factor loadings) with an interface-friendly surface:
     opt = PortfolioOptimizer(betas, factor_cov, idio_var)
     result = opt.optimize(targets, allow_shorts=True, short_floor=-0.10)
 
-One design note worth understanding: the optimizer *minimizes* variance
-for a fixed mandate, so the achieved volatility is an **output**, not an
-input.  A "target vol" above the minimum is automatically satisfied; a
-target vol below it is mathematically impossible while still hitting the
-mandate.  That is why the interface treats a vol budget as a *warning
-threshold* (``check_vol_budget``) rather than a hard constraint -an honest way to frame it.
+The optimizer minimizes variance for a fixed mandate, so achieved
+volatility is an **output**, not an input.  A vol budget above the
+minimum is automatically satisfied; below it, the mandate is infeasible.
+The interface therefore treats the vol budget as a *warning threshold*
+(``check_vol_budget``) rather than a hard constraint.
 """
 from __future__ import annotations
 

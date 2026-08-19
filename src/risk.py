@@ -1,9 +1,9 @@
 """
 Step 5 - Performance & risk analysis
 ======================================
-Takes the Step-4 optimal portfolio into the "so how did it actually do?"
-phase.  Everything is computed on the same monthly window (2015-2019)
-used to build the model, and compared against the two natural references:
+Takes the Step-4 optimal portfolio into performance and risk analysis.
+Everything is computed on the same monthly window (2015-2019) used to
+build the model, and compared against the two natural references:
 
   * SPY          - the market benchmark (what a passive investor earns)
   * equal weight - the naive 26-stock portfolio (no optimization)
@@ -14,7 +14,7 @@ Metrics produced:
   * maximum drawdown and the full drawdown path
   * Value at Risk (historical + normal) and Expected Shortfall (CVaR)
   * factor attribution - a regression of portfolio returns on the five
-    Fama-French factors that answers "which factor is paying me?"
+    Fama-French factors
 
 Two conventions worth knowing:
 
@@ -29,7 +29,7 @@ from __future__ import annotations
 
 import matplotlib
 
-matplotlib.use("Agg")          # headless-safe backend (no GUI needed)
+matplotlib.use("Agg")          # headless-safe backend
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -44,8 +44,7 @@ from src.analysis import (GP_DIVERGING, GP_DIVERGING_SEMANTIC,
 from src.config import FIGURES_DIR
 from src.regressions import MODEL_5F
 
-# Monochrome palette (flat near-black canvas, gray ramp; red only for
-# downside so losses stay readable in an otherwise grayscale system)
+# Monochrome palette: gray ramp, red reserved for downside.
 ACCENT = "#F8F8F8"
 NEG = "#E5484D"
 YELLOW = "#B4B4B4"
@@ -57,9 +56,8 @@ YELLOW = "#B4B4B4"
 def annualized_return(monthly_returns):
     """Geometric annualized return: (prod(1+r))^(12/n) - 1.
 
-    Geometric compounding is used because it respects the order of
-    returns - a +50% then -33% pair nets zero, which arithmetic means
-    would misreport.
+    Geometric compounding respects the order of returns (a +50% then
+    -33% pair nets zero, which arithmetic means would misreport).
     """
     growth = (1.0 + monthly_returns).prod()
     n = len(monthly_returns)
@@ -112,9 +110,8 @@ def historical_var(monthly_returns, alpha=0.05):
 def normal_var(monthly_returns, alpha=0.05):
     """Parametric VaR assuming normally distributed returns.
 
-    VaR = -(mean + z_alpha * std).  This is the "quick and dirty" VaR;
-    comparing it to the historical VaR tells us how fat the left tail of
-    the actual return distribution is.
+    VaR = -(mean + z_alpha * std).  Comparing it to the historical VaR
+    shows how fat the left tail of the actual return distribution is.
     """
     from scipy import stats as sp_stats
 
@@ -128,8 +125,8 @@ def expected_shortfall(monthly_returns, alpha=0.05):
     """Expected Shortfall / CVaR: average return in the worst alpha tail.
 
     Where VaR says "the worst month is at least X% bad", CVaR says "when
-    it IS that bad, the average loss is Y%".  CVaR is a coherent risk
-    measure - it captures tail severity, not just the boundary.
+    it IS that bad, the average loss is Y%".  Captures tail severity,
+    not just the boundary.
     """
     q = np.quantile(monthly_returns, alpha)
     tail = monthly_returns[monthly_returns <= q]
@@ -209,10 +206,7 @@ def factor_attribution(portfolio_excess, factors, factor_cols=None):
 def plot_cumulative_returns(growth, path=None,
                             title="Cumulative growth - optimal vs benchmark",
                             mode: str = "mono"):
-    """Growth-of-a-dollar lines for each return series (log scale not
-    needed here - 5 years, comparable magnitudes).  In semantic mode the
-    benchmark (SPY) picks up the deep green and equal-weight the amber,
-    so the three lines stop being shades of gray."""
+    """Growth-of-a-dollar lines for each return series."""
     apply_style()
     if _semantic(mode):
         palette = {"Optimal": ACCENT, "SPY": POS, "Equal weight": AMBER}
@@ -239,10 +233,9 @@ def plot_drawdowns(returns, path=None, title="Drawdowns - optimal vs benchmark",
                    mode: str = "mono"):
     """Drawdown paths: how deep underwater each strategy got.
 
-    Accepts the *returns* frame and computes drawdowns internally via
-    drawdown_series (single source of truth for the metric).  In
-    semantic mode the underwater region of the optimal portfolio is
-    tinted with the downside red - the tail is where losses live.
+    Accepts the returns frame and computes drawdowns internally via
+    drawdown_series.  In semantic mode the optimal portfolio's underwater
+    region is tinted with the downside red.
     """
     apply_style()
     if _semantic(mode):

@@ -8,34 +8,25 @@ network that learns to reproduce its input through a narrow bottleneck -
 on the monthly cross-section of stock returns, and use its
 reconstruction error as an anomaly score.
 
-Why an autoencoder works as a novelty detector:
+A month that follows the usual co-movement patterns compresses and
+rebuilds faithfully, so its reconstruction error is small; a month where
+those relationships break down does not fit the learned manifold, so the
+error spikes.
 
-    A month that follows the usual co-movement patterns (the learned
-    "normal" structure) is easy to compress and rebuild faithfully, so
-    its reconstruction error is small.  A month where the usual
-    relationships break down - a crash, a sector shock, a liquidity
-    event - does not fit the learned manifold, so the network struggles
-    to rebuild it and the error spikes.
+With only 59 monthly observations and 26 features, the network would
+otherwise memorize every month (error -> 0 everywhere).  The tiny latent
+layer (3 units) forces compression so only genuinely unusual months are
+hard to rebuild.  In practice this is trained on daily data (thousands
+of samples); here it is a controlled demonstration.
 
-Why the bottleneck matters:
-
-    With only 59 monthly observations and 26 features, the network would
-    otherwise just memorize every month (reconstruction error -> 0
-    everywhere, no signal).  The tiny latent layer (3 units) *forces*
-    compression: the model can only keep the dominant co-movement modes,
-    so only genuinely unusual months are hard to rebuild.  In practice
-    you would train on daily data (thousands of samples) where this is
-    far less delicate; here it is a controlled demonstration.
-
-The autoencoder is implemented from scratch in numpy (explicit forward
-pass, backpropagation, Adam updates) so the mechanics are fully visible
-- no black-box neural-network library involved.
+The autoencoder is implemented in numpy (explicit forward pass,
+backpropagation, Adam updates) so the mechanics are fully visible.
 """
 from __future__ import annotations
 
 import matplotlib
 
-matplotlib.use("Agg")          # headless-safe backend (no GUI needed)
+matplotlib.use("Agg")          # headless-safe backend
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -64,8 +55,7 @@ class Autoencoder:
 
     def __init__(self, input_dim, hidden_dim=10, latent_dim=3, seed=0):
         rng = np.random.default_rng(seed)
-        # Xavier/Glorot initialization: scale by 1/sqrt(fan_in) keeps the
-        # pre-activation variances stable across layers during backprop.
+        # Xavier/Glorot normal init: std = sqrt(2 / (fan_in + fan_out)).
         def layer(fan_in, fan_out):
             return rng.normal(0.0, np.sqrt(2.0 / (fan_in + fan_out)),
                               size=(fan_in, fan_out))
@@ -142,10 +132,7 @@ class Autoencoder:
         for epoch in range(1, epochs + 1):
             out, cache = self._forward(X)
             loss = 0.5 * float(np.mean((out - X) ** 2))
-            # Gradient of the loss w.r.t. the output layer.  The 1/N batch
-            # averaging happens in _backward (each weight gradient divides
-            # by len(X)), so this is the plain residual - no extra /N here,
-            # otherwise every gradient would be N times too small.
+            # Plain residual; the 1/N batch average happens in _backward.
             dout = out - X
 
             grads = self._backward(X, cache, dout)
@@ -199,12 +186,8 @@ def pca_reconstruction_errors(X, n_components=3, fit_X=None):
     """Reconstruction errors of PCA with n_components latent dims.
 
     PCA is the linear special case of an autoencoder: project onto the
-    top-k principal components and project back.  Comparing its flagged
-    months to the nonlinear autoencoder's shows whether the nonlinear
-    structure adds anything over plain linear compression.
-
-    fit_X lets the caller fit the PCA on the training months only, so the
-    baseline has no validation leakage (defaults to fitting on X itself).
+    top-k principal components and project back.  fit_X lets the caller
+    fit on the training months only (defaults to fitting on X itself).
     """
     fit = X if fit_X is None else fit_X
     pca = PCA(n_components=n_components)
@@ -220,9 +203,8 @@ def pca_reconstruction_errors(X, n_components=3, fit_X=None):
 def detect_anomalies(errors, reference=None, threshold_sigma=2.0):
     """Flag samples whose error exceeds mean + k*sigma of the reference.
 
-    The threshold is set by the *reference* errors - pass the training
-    ("normal") months so anomalies cannot inflate their own bar.
-    Returns (flags, threshold).
+    The threshold is set by the reference errors - pass the training
+    months so anomalies cannot inflate their own bar.  Returns (flags, threshold).
     """
     ref = (np.asarray(reference, dtype=float) if reference is not None
            else np.asarray(errors, dtype=float))

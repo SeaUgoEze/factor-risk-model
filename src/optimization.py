@@ -12,15 +12,13 @@ target factor profile while minimizing risk:
 
 where D = diag(idiosyncratic variances) comes from the Step-2 regressions.
 
-Why the factor structure matters: the full stock covariance is 26x26 and
-would be dominated by estimation noise with only 59 months of data.  The
-factor covariance is 5x5 - easy to estimate - and B V_f B' + D rebuilds
-the stock covariance with ~100x fewer parameters.  That is the core trick
-of factor investing: the factors are the *data compression*.
+The full stock covariance is 26x26 and would be dominated by estimation
+noise with only 59 months of data; the factor covariance is 5x5, and
+B V_f B' + D rebuilds the stock covariance with far fewer parameters.
 
 We solve with scipy.optimize.minimize(method="SLSQP") - sequential
-quadratic programming.  SLSQP is a *local* solver, so we start it from the
-equal-weight portfolio (a sensible, feasible initial point).
+quadratic programming.  SLSQP is a local solver, so we start from the
+equal-weight portfolio (a feasible initial point).
 """
 from __future__ import annotations
 
@@ -44,7 +42,7 @@ def summarize(weights, betas, factor_cov, idio_var):
     d = np.asarray(idio_var.reindex(betas.index))
 
     factor_var = float(weights @ B @ V @ B.T @ weights)
-    # idiosyncratic part: sum_i w_i^2 * sigma_i^2  (d is 1-D, so square w)
+    # idiosyncratic part: sum_i w_i^2 * sigma_i^2
     idio_var_p = float((weights ** 2) @ d)
     total_var = factor_var + idio_var_p
 
@@ -64,10 +62,8 @@ def target_factor_portfolio(betas, factor_cov, idio_var, targets,
     """Minimize variance subject to factor-exposure targets.
 
     Tries SLSQP first, then falls back to trust-constr (both local solvers
-    with the same API) and returns the best *feasible* result - or the
-    lowest-variance result if the mandate cannot be satisfied at all
-    (which itself is an important, honest finding: long-only universes
-    often cannot hit aggressive multi-factor targets).
+    with the same API) and returns the best feasible result - or the
+    lowest-variance result if the mandate cannot be satisfied at all.
 
     Parameters
     ----------
@@ -86,15 +82,12 @@ def target_factor_portfolio(betas, factor_cov, idio_var, targets,
     n = len(betas)
     B = betas.values
     V = factor_cov.values
-    # Hoist the 26x26 covariance and the idiosyncratic vector out of the
-    # objective (they are constant across all candidate weight vectors).
+    # Constant across all candidate weight vectors.
     M = B @ V @ B.T          # factor covariance mapped to stock space
     d = np.asarray(idio_var.reindex(betas.index))
     factor_names = list(betas.columns)
     target_vec = np.array([targets.get(k, 0.0) for k in factor_names])
-    # Align the target series to ALL factors (missing -> 0.0), exactly like
-    # the constraint vector, so the feasibility check never sees NaN gaps
-    # for factors the mandate simply does not mention.
+    # Align targets to all factors (missing -> 0.0), like the constraint vector.
     target_series = pd.Series(target_vec, index=factor_names)
 
     def objective(w):
@@ -105,8 +98,8 @@ def target_factor_portfolio(betas, factor_cov, idio_var, targets,
     # sum(w) = 1  (equality constraint)
     constraints = [{"type": "eq", "fun": lambda w: w.sum() - 1.0}]
 
-    # |(B'w)_k - target_k| <= tol  ->  two linear inequality constraints per
-    # factor (avoids the non-smooth absolute value in the constraint list).
+    # |(B'w)_k - target_k| <= tol as two linear inequalities per factor
+    # (avoids a non-smooth absolute value in the constraint list).
     for i in range(len(factor_names)):
         constraints.append(
             {"type": "ineq", "fun": lambda w, i=i: tolerance - (B.T @ w - target_vec)[i]})
@@ -145,10 +138,8 @@ def target_factor_portfolio(betas, factor_cov, idio_var, targets,
             "Portfolio optimization failed: both SLSQP and trust-constr "
             "raised without producing a candidate solution.")
 
-    # trust-constr can silently drift off the equality constraint on
-    # degenerate problems (e.g. a single stock), so only accept weights
-    # that actually sum to one.  A candidate that breaks sum(w)=1 is not
-    # a portfolio.
+    # trust-constr can drift off the sum(w)=1 constraint on degenerate
+    # problems, so only accept weights that sum to one.
     valid = [c for c in candidates if abs(c["weights"].sum() - 1.0) < 1e-4]
     if not valid:
         raise RuntimeError(

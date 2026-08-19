@@ -45,11 +45,10 @@ class AppData:
 
 
 def _sector_map_for(tickers: list[str]) -> dict:
-    """UNIVERSE sectors for known names, 'Other' for custom tickers.
+    """    UNIVERSE sectors for known names, 'Other' for custom tickers.
 
-    SPY is deliberately absent: the engine's exposure_heatmap falls back
-    to its own 'Benchmark' group for any ticker missing from the map, so
-    SPY gets a dedicated color without us inflating the sector list.
+    SPY is absent: the engine's exposure_heatmap falls back to its own
+    'Benchmark' group for any ticker missing from the map.
     """
     return {t: UNIVERSE.get(t, "Other") for t in tickers
             if t != BENCHMARK}

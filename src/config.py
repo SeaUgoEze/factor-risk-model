@@ -1,8 +1,7 @@
 """
 Central configuration for the project.
 
-Every path, date and universe choice lives here so the rest of the
-project stays clean and changes are made in one place.
+Central configuration: paths, analysis window and stock universe.
 """
 
 from pathlib import Path
@@ -21,21 +20,14 @@ for _dir in (DATA_DIR, FIGURES_DIR, OUTPUTS_DIR):
 # ----------------------------------------------------------------------
 # Analysis window
 #
-# We intentionally use 2015-2019: a "normal" regime with no crisis.
-# COVID's 2020 drawdown is deliberately excluded so the *factor model*
-# is estimated on clean data first.  Extending the window through 2020+
-# to stress-test the model is left as future work (see the limitations
-# section of the README).
+# 2015-2019: a "normal" regime with no crisis.  2020's COVID drawdown is
+# excluded so the factor model is estimated on clean data first.
 # ----------------------------------------------------------------------
 START_DATE = "2015-01-01"
 END_DATE = "2019-12-31"
 
 # ----------------------------------------------------------------------
-# Stock universe: 26 S&P 500 names across 8 sectors (ticker -> sector)
-#
-# Sector diversity matters: different sectors load differently on the
-# size / value / profitability / investment factors, which is exactly
-# the variation we exploit when we optimize factor exposures in Step 4.
+# Stock universe: 26 S&P 500 names across 8 sectors (ticker -> sector).
 # ----------------------------------------------------------------------
 UNIVERSE = {
     # Technology

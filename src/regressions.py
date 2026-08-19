@@ -59,16 +59,14 @@ def exposure_table(excess_returns, factors, factor_cols):
         R2, adj_R2, resid_sd, n
 
     The ci_lo_<k> / ci_hi_<k> columns are the 95% confidence interval for
-    each factor loading (beta +/- 1.96 * std error) - how precisely the
-    59-month sample pins the exposure down.
+    each factor loading (beta +/- 1.96 * std error).
     """
     design = sm.add_constant(factors[factor_cols])   # intercept = alpha
     rows = {}
 
     for ticker in excess_returns.columns:
-        # statsmodels works positionally (it ignores pandas indexes), so align
-        # y to the design matrix explicitly; missing="drop" also makes any
-        # NaN fail loudly-correctly instead of silently poisoning the fit.
+        # statsmodels works positionally (ignores pandas indexes), so align
+        # y to the design matrix explicitly; missing="drop" drops NaN rows.
         y = excess_returns[ticker].reindex(design.index)
         fit = sm.OLS(y, design, missing="drop").fit()   # closed-form OLS
         ci = fit.conf_int()                     # 95% CI per coefficient

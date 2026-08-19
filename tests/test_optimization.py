@@ -30,7 +30,7 @@ def test_shorts_respect_floor(full_optimizer):
 
 
 def test_long_only_infeasible_for_aggressive_value(full_optimizer):
-    """The honest engine finding: HML ~1.0 is out of reach long-only."""
+    """HML ~1.0 is out of reach long-only."""
     targets = {"Mkt-RF": 1.0, "SMB": 0.5, "HML": 1.0}
     r = full_optimizer.optimize(targets, allow_shorts=False)
     assert not r["feasible"]

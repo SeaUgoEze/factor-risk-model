@@ -252,10 +252,8 @@ st.markdown("""
 </style>""", unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
-# Footer - LinkedIn-style privacy line, pinned to the bottom of the
-# viewport so it is visible in EVERY state: before the analysis runs,
-# after it runs, and on errors. It is emitted before any st.stop() so
-# no code path can skip it.
+# Footer - privacy line pinned to the bottom of the viewport, emitted
+# before any st.stop() so it is visible in every state.
 # ----------------------------------------------------------------------
 st.markdown("""
 <style>
@@ -373,13 +371,10 @@ st.iframe(
 )
 
 # ----------------------------------------------------------------------
-# Empty-state graph - a self-drawing, glowing equity curve shown under the
+# Empty-state graph - a self-drawing equity curve shown under the
 # "Run analysis" hint before the pipeline has run.  One-shot CSS animation
-# on an inline SVG (stroke-dashoffset draw-on, then a popping end dot),
-# built from the existing monochrome tokens (--gp-ink line, --gp-raised
-# axes, --gp-line grid).  It only ever renders in the pre-run branch, so
-# the ~2s draw plays at most once per session - a rare, first-time moment
-# where a little delight is earned.
+# on an inline SVG, built from the monochrome tokens.  It only renders in
+# the pre-run branch, so it plays at most once per session.
 # ----------------------------------------------------------------------
 _EMPTY_STATE_GRAPH = """
 <style>
@@ -676,7 +671,7 @@ with tab_an:
 with tab_out:
     st.subheader("Download results")
     st.caption("CSV/Excel contain the tables; the PDF and HTML reports are "
-               "the recruiter-facing artifacts. The HTML report can be "
+               "the shareable artifacts. The HTML report can be "
                "printed to PDF from any browser.")
 
     cols = st.columns(4)

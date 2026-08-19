@@ -1,13 +1,12 @@
-"""run_pipeline - the one function every interface calls.
+"""run_pipeline - the single entry point used by the app, CLI and tests.
 
-The interactive app, the CLI and the tests all go through here, so the numbers can
-never disagree between interfaces.  It runs the whole engine chain:
+It runs the whole engine chain:
 
     fetch -> align -> regressions (+CIs) -> optimize -> risk -> stress
     -> anomaly
 
-and hands back a PipelineResult: every table the UI shows, every figure
-it displays, and the auto-generated plain-English interpretation.
+and returns a PipelineResult with every table, figure and the generated
+plain-English interpretation.
 """
 from __future__ import annotations
 
@@ -177,7 +176,7 @@ def run_pipeline(tickers, start: str, end: str,
                                                figures_dir / "anomaly.png"),
     }
 
-    # CI + rolling charts for the first ticker (a taste of the new math)
+    # CI + rolling charts for the first ticker
     first = tickers[0]
     row = table.loc[first]
     figures["ci"] = plots.plot_exposure_ci(

@@ -1,6 +1,6 @@
 # 001 — Add the fade-up entrance to the results metric cards
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: N/A — the working copy is unversioned (the `.git/` folder was removed by the user)
 - **Severity**: MEDIUM
 - **Category**: Missed opportunities (results-block arrival cohesion)

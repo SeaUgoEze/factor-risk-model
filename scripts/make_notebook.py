@@ -49,7 +49,7 @@ numbers and charts from the cached dataset.
 | 4 | What portfolio hits a target factor profile at minimum risk? |
 | 5 | Did the portfolio actually work? (performance & risk) |
 | 6 | Which months did the factor model fail to explain? (autoencoder) |
-| 7 | Key takeaways and honest limitations |
+| 7 | Key takeaways and limitations |
 """))
 
 # ======================================================================
@@ -112,7 +112,7 @@ returns and aligned with the monthly factors on the same month-end calendar.
 
 Why monthly? The factors are monthly, and monthly betas are the academic convention -
 daily betas are polluted by bid-ask bounce and asynchronous trading. The window
-**2015–2019** is deliberately a "normal" regime: no crisis, so the factor model is
+**2015–2019** is a "normal" regime: no crisis, so the factor model is
 estimated on clean data.
 
 **The universe:** 26 S&P 500 names across 8 sectors + SPY as the benchmark.
@@ -412,7 +412,7 @@ cells.append(md("""
 months of data and 26 stocks, the raw 26×26 covariance matrix would be dominated by
 estimation noise. Re-expressing risk through five factors collapses the problem to a 5×5
 factor covariance - roughly 100× fewer parameters - and the factor structure `B Σ B' + D`
-rebuilds the portfolio covariance reliably. That is the *core trick* of factor investing,
+rebuilds the portfolio covariance reliably. That is the key idea of factor investing,
 and I now see it from the inside: every number in this project (betas, R², attribution,
 optimization) is a consequence of that compression.
 
@@ -436,7 +436,7 @@ and asset managers:
 1. **The mandate sets the factor risk budget** (target HML, SMB, …) - the investment
    committee's view translated into numbers.
 2. **The optimizer allocates** across securities to realize those exposures at minimum
-   risk - with honest feasibility analysis ("your long-only universe cannot do this" is
+   risk - with feasibility analysis ("your long-only universe cannot do this" is
    exactly the conversation a factor PM has weekly).
 3. **The risk engine measures** - VaR/CVaR, drawdowns, attribution - and the anomaly
    lens adds a monitoring layer over the factor model.
@@ -447,11 +447,11 @@ though the optimizer won), and *CVaR > VaR* as the coherent tail measure.
 
 ---
 
-### 3 · Honest limitations
+### 3 · Limitations
 
 1. **In-sample everywhere.** Betas are estimated and portfolios optimized on the same
    2015–19 window - the vol and Sharpe figures are optimistic.
-2. **One regime.** The window deliberately excludes a crisis; the model says nothing
+2. **One regime.** The window excludes a crisis; the model says nothing
    about March 2020 behaviour.
 3. **Static betas.** Exposures are point estimates, not rolling; real desks update
    monthly.

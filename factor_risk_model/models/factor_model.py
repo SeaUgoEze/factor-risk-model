@@ -8,9 +8,8 @@ an object the interface can ask simple questions of:
     model.betas()          -> clean (stocks x factors) matrix for the optimizer
     model.rolling(...)     -> how exposures drift over time (windowed OLS)
 
-Why a class?  The interface needs one object that holds the dataset, the
-chosen factor set, and all derived quantities.  A class makes the state
-explicit and lets the dashboard/CLI layers stay thin.
+A class holds the dataset, chosen factor set and derived quantities in
+one object so the dashboard/CLI layers stay thin.
 """
 from __future__ import annotations
 
@@ -63,8 +62,7 @@ class FactorModel:
         """Display-ready exposure table: beta ± CI per factor + fit stats.
 
         Columns like 'HML' show '0.83  [0.58, 1.08]' - the point estimate
-        with its 95% confidence interval, so a user immediately sees how
-        precisely (or imprecisely) an exposure is measured.
+        with its 95% confidence interval.
         """
         table = self.exposures()
         pretty = pd.DataFrame(index=table.index)
@@ -93,9 +91,8 @@ class FactorModel:
 
         Returns
         -------
-        {factor: DataFrame(date x ticker)} of beta paths - e.g. how AAPL's
-        HML loading drifted as it became a growth stock.  With 59 months
-        and window=36, you get ~8 windows - a coarse but honest look.
+        {factor: DataFrame(date x ticker)} of beta paths.  With 59 months
+        and window=36, you get ~8 windows.
         """
         if window < 24:
             raise ValueError("Rolling window needs >= 24 months.")

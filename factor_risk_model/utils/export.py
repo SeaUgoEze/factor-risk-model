@@ -4,14 +4,11 @@ Used by both the interactive app (download buttons) and the CLI (writes to
 ``outputs/reports/``).  The PDF report is built with matplotlib's
 PdfPages - already installed, zero extra dependencies.
 
-Layout contract: every format follows one narrative so the recruiter-
-facing artifacts never disagree with the app or each other:
+Every exporter takes the PipelineResult and a destination and returns
+the path it wrote.  All formats share one section order:
 
     cover / summary -> factor exposures -> portfolio optimization
     -> risk & performance -> stress test -> anomaly detection
-
-Every exporter takes the PipelineResult and a destination and returns
-the path it wrote.
 """
 from __future__ import annotations
 
@@ -31,8 +28,8 @@ from factor_risk_model.utils.helpers import fmt_pct
 CSV_TABLES = ("exposures", "weights", "risk_summary", "attribution",
               "stress", "anomaly_flags")
 
-# One narrative, shared by HTML + PDF.  (figure key, section heading,
-# figure caption, alt text).  Order is the reading order.
+# Shared by HTML + PDF: (figure key, section heading, caption, alt text).
+# Order is the reading order.
 SECTIONS = (
     ("exposures", "1 · Factor exposures",
      "Beta loadings across the universe - the SPY row at the bottom is the "
@@ -60,8 +57,7 @@ SECTIONS = (
      "Anomaly detection chart"),
 )
 
-# Figure key -> table shown beneath it in the same section (each
-# table sits with the chart that tells the same story).
+# Figure key -> table shown beneath it in the same section.
 TABLE_UNDER = {
     "exposures": "exposures",
     "weights": "weights",
@@ -81,8 +77,7 @@ TABLE_TITLES = {
     "anomaly_flags": "Anomaly detection - flagged windows",
 }
 
-# Short scannable labels for the cover's Contents section (the full page
-# titles are too long for the two-column layout).  Order matches SECTIONS.
+# Short labels for the cover's Contents section.  Order matches SECTIONS.
 CONTENTS_LABELS = {
     "exposures": "Factor exposures",
     "ci": "Exposures with 95% CI",
@@ -119,16 +114,13 @@ def _data_uri(path) -> str:
 
 
 def _generated_stamp(generated) -> str:
-    """Human 'Report generated …' stamp shared by every report surface.
-
-    Accepts any pandas/datetime-like input (defensive for future callers).
-    """
+    """Human 'Report generated …' stamp shared by every report surface."""
     generated = pd.Timestamp(generated)
     return f"Report generated {generated:%Y-%m-%d} at {generated:%H:%M}"
 
 
 def _headline_metrics(result) -> list[tuple[str, str]]:
-    """The four numbers every reader wants first (label, value)."""
+    """The four headline numbers (label, value)."""
     m = result.risk_summary.loc["Optimal"]
     return [
         ("Annualized return", fmt_pct(m["ann_return_%"] / 100)),
@@ -175,8 +167,8 @@ def _summary_rows(result) -> pd.DataFrame:
 def export_excel(result, dest) -> object:
     """Single workbook: Summary sheet first, then one sheet per table.
 
-    Every sheet gets a dark header row with white bold text, frozen top
-    row, and auto-sized columns so the workbook reads cleanly.
+    Every sheet gets a dark header row, frozen top row and auto-sized
+    columns.
 
     ``dest`` is a Path to write, or any writable file-like (e.g. a
     BytesIO for an in-memory download).
@@ -607,8 +599,8 @@ def export_pdf(result, figures: dict[str, Path], dest) -> object:
         pdf.savefig(fig)
         plt.close(fig)
 
-        # ---- one page per chart, in narrative order (the page numbers
-        #      printed in the Contents section match exactly) ----
+        # ---- one page per chart, in reading order (matching the
+        #      Contents page numbers) ----
         for _key, title, caption, img in chart_pages:
             page_no += 1
             _chart_page(pdf, img, title, caption, page_no, generated)
